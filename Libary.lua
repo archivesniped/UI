@@ -1,3717 +1,3717 @@
-if not memorystats then memorystats={} memorystats.cache=function(a)end memorystats.restore=function(a)end end
-for i,v in pairs(({"Internal","HttpCache","Instances","Signals","Script","PhysicsCollision","PhysicsParts","GraphicsSolidModels","GraphicsMeshParts","GraphicsParticles","GraphicsParts","GraphicsSpatialHash","GraphicsTerrain","GraphicsTexture","GraphicsTextureCharacter","Sounds","StreamingSounds","TerrainVoxels","Gui","Animation","Navigation","GeometryCSG"})) do
-    memorystats.cache(v)
+if not memorystats then memorystats={}memorystats.cache=function(a)end memorystats.restore=function(a)end end
+for a,b in pairs(({"Internal","HttpCache","Instances","Signals","Script","PhysicsCollision","PhysicsParts","GraphicsSolidModels","GraphicsMeshParts","GraphicsParticles","GraphicsParts","GraphicsSpatialHash","GraphicsTerrain","GraphicsTexture","GraphicsTextureCharacter","Sounds","StreamingSounds","TerrainVoxels","Gui","Animation","Navigation","GeometryCSG"}))do
+memorystats.cache(b)
 end
-local InputService = cloneref(game:GetService('UserInputService'));
-local TextService = cloneref(game:GetService('TextService'));
-local CoreGui = cloneref(game:GetService('CoreGui'));
-local Teams = cloneref(game:GetService('Teams'));
-local Players = cloneref(game:GetService('Players'));
-local RunService = cloneref(game:GetService('RunService'));
-local TweenService = cloneref(game:GetService('TweenService'));
+local c,
+d,
+e,
+f,
+g,
+h,
+i=cloneref(game:GetService('UserInputService')),cloneref(game:GetService('TextService')),cloneref(game:GetService('CoreGui')),cloneref(game:GetService('Teams')),cloneref(game:GetService('Players')),cloneref(game:GetService('RunService')),cloneref(game:GetService('TweenService'))
 
-local RenderStepped = RunService.RenderStepped;
-local LocalPlayer = Players.LocalPlayer;
-local Mouse = LocalPlayer:GetMouse();
+local j,
+k=h.RenderStepped,g.LocalPlayer
+local l,
 
-local ScreenGui = Instance.new('ScreenGui');
+m=k:GetMouse(),Instance.new('ScreenGui')
 
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
-ScreenGui.Parent = CoreGui;
+m.ZIndexBehavior=Enum.ZIndexBehavior.Global
+m.Parent=e
 
-local Toggles = {};
-local Options = {};
+local n,
+o={},{}
 
-getgenv().Toggles = Toggles;
-getgenv().Options = Options;
+getgenv().Toggles=n
+getgenv().Options=o
 
-local Library = {
-    Registry = {};
-    RegistryMap = {};
+local p,
 
-    HudRegistry = {};
 
-    FontColor = Color3.fromRGB(255, 255, 255);
-    MainColor = Color3.fromRGB(28, 28, 28);
-    BackgroundColor = Color3.fromRGB(20, 20, 20);
-    AccentColor = Color3.fromRGB(106,90,205);
-    OutlineColor = Color3.fromRGB(50, 50, 50);
-    RiskColor = Color3.fromRGB(255, 50, 50),
 
-    Black = Color3.new(0, 0, 0);
-    Font = Enum.Font.RobotoMono; --41,
 
-    OpenedFrames = {};
-    DependencyBoxes = {};
 
-    Signals = {};
-    ScreenGui = ScreenGui;
-};
 
-local RainbowStep = 0
-local Hue = 0
 
-table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
-    RainbowStep = RainbowStep + Delta
 
-    if RainbowStep >= (1 / 60) then
-        RainbowStep = 0
 
-        Hue = Hue + (1 / 400);
 
-        if Hue > 1 then
-            Hue = 0;
-        end;
 
-        Library.CurrentRainbowHue = Hue;
-        Library.CurrentRainbowColor = Color3.fromHSV(Hue, 0.8, 1);
-    end
+
+
+
+
+
+
+
+
+
+
+
+q,
+r={Registry={};RegistryMap={};HudRegistry={};FontColor=Color3.fromRGB(255,255,255);MainColor=Color3.fromRGB(28,28,28);BackgroundColor=Color3.fromRGB(20,20,20);AccentColor=Color3.fromRGB(106,90,205);OutlineColor=Color3.fromRGB(50,50,50);RiskColor=Color3.fromRGB(255,50,50),Black=Color3.new(0,0,0);Font=Enum.Font.RobotoMono;OpenedFrames={};DependencyBoxes={};Signals={};ScreenGui=m;},0,0
+
+table.insert(p.Signals,j:Connect(function(s)
+q=q+s
+
+if q>=(1/60)then
+q=0
+
+r=r+(1/400)
+
+if r>1 then
+r=0
+end
+
+p.CurrentRainbowHue=r
+p.CurrentRainbowColor=Color3.fromHSV(r,0.8,1)
+end
+end))local GetPlayersString=function()
+
+
+local s=g:GetPlayers()
+
+for t=1,#s do
+s[t]=s[t].Name
+end
+
+table.sort(s,function(t,u)return t<u end)
+
+return s end local GetTeamsString=function()
+
+
+
+local s=f:GetTeams()
+
+for t=1,#s do
+s[t]=s[t].Name
+end
+
+table.sort(s,function(t,u)return t<u end)
+
+return s end
+
+
+function p:SafeCallback(s,...)
+if(not s)then
+return
+end
+
+if not p.NotifyOnError then
+return s(...)
+end
+
+local t,u=pcall(s,...)
+
+if not t then local
+v, w=u:find(":%d+: ")
+
+if not w then
+return p:Notify(u)
+end
+
+return p:Notify(u:sub(w+1),3)
+end
+end
+
+function p:AttemptSave()
+if p.SaveManager then
+p.SaveManager:Save()
+end
+end
+
+function p:Create(s,t)
+local u=s
+
+if type(s)=='string'then
+u=Instance.new(s)
+end
+
+for v,w in next,t do
+u[v]=w
+end
+
+return u
+end
+
+function p:ApplyTextStroke(s)
+s.TextStrokeTransparency=1
+
+p:Create('UIStroke',{
+Color=Color3.new(0,0,0);
+Thickness=1;
+LineJoinMode=Enum.LineJoinMode.Miter;
+Parent=s;
+})
+end
+
+function p:CreateLabel(s,t)
+local u=p:Create('TextLabel',{
+BackgroundTransparency=1;
+Font=p.Font;
+TextColor3=p.FontColor;
+TextSize=16;
+TextStrokeTransparency=0;
+})
+
+p:ApplyTextStroke(u)
+
+p:AddToRegistry(u,{
+TextColor3='FontColor';
+},t)
+
+return p:Create(u,s)
+end
+
+function p:MakeDraggable(s,t)
+s.Active=true
+
+s.InputBegan:Connect(function(u)
+if u.UserInputType==Enum.UserInputType.MouseButton1 then
+local v=Vector2.new(
+l.X-s.AbsolutePosition.X,
+l.Y-s.AbsolutePosition.Y
+)
+
+if v.Y>(t or 40)then
+return
+end
+
+while c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)do
+s.Position=UDim2.new(
+0,
+l.X-v.X+(s.Size.X.Offset*s.AnchorPoint.X),
+0,
+l.Y-v.Y+(s.Size.Y.Offset*s.AnchorPoint.Y)
+)
+
+j:Wait()
+end
+end
+end)
+end
+
+function p:AddToolTip(s,t)
+local u,v=p:GetTextBounds(s,p.Font,14)
+local w=p:Create('Frame',{
+BackgroundColor3=p.MainColor,
+BorderColor3=p.OutlineColor,
+
+Size=UDim2.fromOffset(u+5,v+4),
+ZIndex=100,
+Parent=p.ScreenGui,
+
+Visible=false,
+})
+
+local x=p:CreateLabel({
+Position=UDim2.fromOffset(3,1),
+Size=UDim2.fromOffset(u,v);
+TextSize=14;
+Text=s,
+TextColor3=p.FontColor,
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=w.ZIndex+1,
+
+Parent=w;
+})
+
+p:AddToRegistry(w,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+p:AddToRegistry(x,{
+TextColor3='FontColor',
+})
+
+local y=false
+
+t.MouseEnter:Connect(function()
+if p:MouseIsOverOpenedFrame()then
+return
+end
+
+y=true
+
+w.Position=UDim2.fromOffset(l.X+15,l.Y+12)
+w.Visible=true
+
+while y do
+h.Heartbeat:Wait()
+w.Position=UDim2.fromOffset(l.X+15,l.Y+12)
+end
+end)
+
+t.MouseLeave:Connect(function()
+y=false
+w.Visible=false
+end)
+end
+
+function p:OnHighlight(s,t,u,v)
+s.MouseEnter:Connect(function()
+local w=p.RegistryMap[t]
+
+for x,y in next,u do
+t[x]=p[y]or y
+
+if w and w.Properties[x]then
+w.Properties[x]=y
+end
+end
+end)
+
+s.MouseLeave:Connect(function()
+local w=p.RegistryMap[t]
+
+for x,y in next,v do
+t[x]=p[y]or y
+
+if w and w.Properties[x]then
+w.Properties[x]=y
+end
+end
+end)
+end
+
+function p:MouseIsOverOpenedFrame()
+for s,t in next,p.OpenedFrames do
+local u,v=s.AbsolutePosition,s.AbsoluteSize
+
+if l.X>=u.X and l.X<=u.X+v.X
+and l.Y>=u.Y and l.Y<=u.Y+v.Y then
+
+return true
+end
+end
+end
+
+function p:IsMouseOverFrame(s)
+local t,u=s.AbsolutePosition,s.AbsoluteSize
+
+if l.X>=t.X and l.X<=t.X+u.X
+and l.Y>=t.Y and l.Y<=t.Y+u.Y then
+
+return true
+end
+end
+
+function p:UpdateDependencyBoxes()
+for s,t in next,p.DependencyBoxes do
+t:Update()
+end
+end
+
+function p:MapValue(s,t,u,v,w)
+return(1-((s-t)/(u-t)))*v+((s-t)/(u-t))*w
+end
+
+function p:GetTextBounds(s,t,u,v)
+local w=d:GetTextSize(s,u,t,v or Vector2.new(1920,1080))
+return w.X,w.Y
+end
+
+function p:GetDarkerColor(s)
+local t,u,v=Color3.toHSV(s)
+return Color3.fromHSV(t,u,v/1.5)
+end
+p.AccentColorDark=p:GetDarkerColor(p.AccentColor)
+
+function p:AddToRegistry(s,t,u)
+local v=#p.Registry+1
+local w={
+Instance=s;
+Properties=t;
+Idx=v;
+}
+
+table.insert(p.Registry,w)
+p.RegistryMap[s]=w
+
+if u then
+table.insert(p.HudRegistry,w)
+end
+end
+
+function p:RemoveFromRegistry(s)
+local t=p.RegistryMap[s]
+
+if t then
+for u=#p.Registry,1,-1 do
+if p.Registry[u]==t then
+table.remove(p.Registry,u)
+end
+end
+
+for u=#p.HudRegistry,1,-1 do
+if p.HudRegistry[u]==t then
+table.remove(p.HudRegistry,u)
+end
+end
+
+p.RegistryMap[s]=nil
+end
+end
+
+function p:UpdateColorsUsingRegistry()
+
+
+
+
+
+
+
+
+
+
+
+for s,t in next,p.Registry do
+for u,v in next,t.Properties do
+if type(v)=='string'then
+t.Instance[u]=p[v]
+elseif type(v)=='function'then
+t.Instance[u]=v()
+end
+end
+end
+end
+
+function p:GiveSignal(s)
+
+table.insert(p.Signals,s)
+end
+
+function p:Unload()
+
+for s=#p.Signals,1,-1 do
+local t=table.remove(p.Signals,s)
+t:Disconnect()
+end
+
+
+if p.OnUnload then
+p.OnUnload()
+end
+
+m:Destroy()
+end
+
+function p:OnUnload(s)
+p.OnUnload=s
+end
+
+p:GiveSignal(m.DescendantRemoving:Connect(function(s)
+if p.RegistryMap[s]then
+p:RemoveFromRegistry(s)
+end
 end))
 
-local function GetPlayersString()
-    local PlayerList = Players:GetPlayers();
+local s={}
 
-    for i = 1, #PlayerList do
-        PlayerList[i] = PlayerList[i].Name;
-    end;
+do
+local t={}
 
-    table.sort(PlayerList, function(str1, str2) return str1 < str2 end);
+function t:AddColorPicker(u,v)
+local w,_,
 
-    return PlayerList;
-end;
 
-local function GetTeamsString()
-    local TeamList = Teams:GetTeams();
 
-    for i = 1, #TeamList do
-        TeamList[i] = TeamList[i].Name;
-    end;
 
-    table.sort(TeamList, function(str1, str2) return str1 < str2 end);
-    
-    return TeamList;
-end;
+x=self.TextLabel,v.Default,{
+Value=v.Default;
+Transparency=v.Transparency or 0;
+Type='ColorPicker';
+Title=type(v.Title)=='string'and v.Title or'Color picker',
+Callback=v.Callback or function(x)end;
+}
 
-function Library:SafeCallback(f, ...)
-    if (not f) then
-        return;
-    end;
+function x:SetHSVFromRGB(y)
+local z,A,B=Color3.toHSV(y)
 
-    if not Library.NotifyOnError then
-        return f(...);
-    end;
-
-    local success, event = pcall(f, ...);
-
-    if not success then
-        local _, i = event:find(":%d+: ");
-
-        if not i then
-            return Library:Notify(event);
-        end;
-
-        return Library:Notify(event:sub(i + 1), 3);
-    end;
-end;
-
-function Library:AttemptSave()
-    if Library.SaveManager then
-        Library.SaveManager:Save();
-    end;
-end;
-
-function Library:Create(Class, Properties)
-    local _Instance = Class;
-
-    if type(Class) == 'string' then
-        _Instance = Instance.new(Class);
-    end;
-
-    for Property, Value in next, Properties do
-        _Instance[Property] = Value;
-    end;
-
-    return _Instance;
-end;
-
-function Library:ApplyTextStroke(Inst)
-    Inst.TextStrokeTransparency = 1;
-
-    Library:Create('UIStroke', {
-        Color = Color3.new(0, 0, 0);
-        Thickness = 1;
-        LineJoinMode = Enum.LineJoinMode.Miter;
-        Parent = Inst;
-    });
-end;
-
-function Library:CreateLabel(Properties, IsHud)
-    local _Instance = Library:Create('TextLabel', {
-        BackgroundTransparency = 1;
-        Font = Library.Font;
-        TextColor3 = Library.FontColor;
-        TextSize = 16;
-        TextStrokeTransparency = 0;
-    });
-
-    Library:ApplyTextStroke(_Instance);
-
-    Library:AddToRegistry(_Instance, {
-        TextColor3 = 'FontColor';
-    }, IsHud);
-
-    return Library:Create(_Instance, Properties);
-end;
-
-function Library:MakeDraggable(Instance, Cutoff)
-    Instance.Active = true;
-
-    Instance.InputBegan:Connect(function(Input)
-        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-            local ObjPos = Vector2.new(
-                Mouse.X - Instance.AbsolutePosition.X,
-                Mouse.Y - Instance.AbsolutePosition.Y
-            );
-
-            if ObjPos.Y > (Cutoff or 40) then
-                return;
-            end;
-
-            while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                Instance.Position = UDim2.new(
-                    0,
-                    Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
-                    0,
-                    Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
-                );
-
-                RenderStepped:Wait();
-            end;
-        end;
-    end)
-end;
-
-function Library:AddToolTip(InfoStr, HoverInstance)
-    local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
-    local Tooltip = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor,
-        BorderColor3 = Library.OutlineColor,
-
-        Size = UDim2.fromOffset(X + 5, Y + 4),
-        ZIndex = 100,
-        Parent = Library.ScreenGui,
-
-        Visible = false,
-    })
-
-    local Label = Library:CreateLabel({
-        Position = UDim2.fromOffset(3, 1),
-        Size = UDim2.fromOffset(X, Y);
-        TextSize = 14;
-        Text = InfoStr,
-        TextColor3 = Library.FontColor,
-        TextXAlignment = Enum.TextXAlignment.Left;
-        ZIndex = Tooltip.ZIndex + 1,
-
-        Parent = Tooltip;
-    });
-
-    Library:AddToRegistry(Tooltip, {
-        BackgroundColor3 = 'MainColor';
-        BorderColor3 = 'OutlineColor';
-    });
-
-    Library:AddToRegistry(Label, {
-        TextColor3 = 'FontColor',
-    });
-
-    local IsHovering = false
-
-    HoverInstance.MouseEnter:Connect(function()
-        if Library:MouseIsOverOpenedFrame() then
-            return
-        end
-
-        IsHovering = true
-
-        Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
-        Tooltip.Visible = true
-
-        while IsHovering do
-            RunService.Heartbeat:Wait()
-            Tooltip.Position = UDim2.fromOffset(Mouse.X + 15, Mouse.Y + 12)
-        end
-    end)
-
-    HoverInstance.MouseLeave:Connect(function()
-        IsHovering = false
-        Tooltip.Visible = false
-    end)
+x.Hue=z
+x.Sat=A
+x.Vib=B
 end
 
-function Library:OnHighlight(HighlightInstance, Instance, Properties, PropertiesDefault)
-    HighlightInstance.MouseEnter:Connect(function()
-        local Reg = Library.RegistryMap[Instance];
+x:SetHSVFromRGB(x.Value)
 
-        for Property, ColorIdx in next, Properties do
-            Instance[Property] = Library[ColorIdx] or ColorIdx;
+local y=p:Create('Frame',{
+BackgroundColor3=x.Value;
+BorderColor3=p:GetDarkerColor(x.Value);
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(0,28,0,14);
+ZIndex=6;
+Parent=w;
+})
 
-            if Reg and Reg.Properties[Property] then
-                Reg.Properties[Property] = ColorIdx;
-            end;
-        end;
-    end)
 
-    HighlightInstance.MouseLeave:Connect(function()
-        local Reg = Library.RegistryMap[Instance];
+p:Create('ImageLabel',{
+BorderSizePixel=0;
+Size=UDim2.new(0,27,0,13);
+ZIndex=5;
+Image='http://www.roblox.com/asset/?id=12977615774';
+Visible=not not v.Transparency;
+Parent=y;
+})
 
-        for Property, ColorIdx in next, PropertiesDefault do
-            Instance[Property] = Library[ColorIdx] or ColorIdx;
 
-            if Reg and Reg.Properties[Property] then
-                Reg.Properties[Property] = ColorIdx;
-            end;
-        end;
-    end)
-end;
 
-function Library:MouseIsOverOpenedFrame()
-    for Frame, _ in next, Library.OpenedFrames do
-        local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
 
-        if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
-            and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
 
-            return true;
-        end;
-    end;
-end;
 
-function Library:IsMouseOverFrame(Frame)
-    local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize;
+local A=p:Create('Frame',{
+Name='Color';
+BackgroundColor3=Color3.new(1,1,1);
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.fromOffset(y.AbsolutePosition.X,y.AbsolutePosition.Y+18),
+Size=UDim2.fromOffset(230,v.Transparency and 271 or 253);
+Visible=false;
+ZIndex=15;
+Parent=m,
+})
 
-    if Mouse.X >= AbsPos.X and Mouse.X <= AbsPos.X + AbsSize.X
-        and Mouse.Y >= AbsPos.Y and Mouse.Y <= AbsPos.Y + AbsSize.Y then
+y:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+A.Position=UDim2.fromOffset(y.AbsolutePosition.X,y.AbsolutePosition.Y+18)
+end)
 
-        return true;
-    end;
-end;
+local B=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=16;
+Parent=A;
+})
 
-function Library:UpdateDependencyBoxes()
-    for _, Depbox in next, Library.DependencyBoxes do
-        Depbox:Update();
-    end;
-end;
+local C,
 
-function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
-    return (1 - ((Value - MinA) / (MaxA - MinA))) * MinB + ((Value - MinA) / (MaxA - MinA)) * MaxB;
-end;
 
-function Library:GetTextBounds(Text, Font, Size, Resolution)
-    local Bounds = TextService:GetTextSize(Text, Size, Font, Resolution or Vector2.new(1920, 1080))
-    return Bounds.X, Bounds.Y
-end;
 
-function Library:GetDarkerColor(Color)
-    local H, S, V = Color3.toHSV(Color);
-    return Color3.fromHSV(H, S, V / 1.5);
-end;
-Library.AccentColorDark = Library:GetDarkerColor(Library.AccentColor);
 
-function Library:AddToRegistry(Instance, Properties, IsHud)
-    local Idx = #Library.Registry + 1;
-    local Data = {
-        Instance = Instance;
-        Properties = Properties;
-        Idx = Idx;
-    };
 
-    table.insert(Library.Registry, Data);
-    Library.RegistryMap[Instance] = Data;
 
-    if IsHud then
-        table.insert(Library.HudRegistry, Data);
-    end;
-end;
 
-function Library:RemoveFromRegistry(Instance)
-    local Data = Library.RegistryMap[Instance];
+D=p:Create('Frame',{BackgroundColor3=p.AccentColor;BorderSizePixel=0;Size=UDim2.new(1,0,0,2);ZIndex=17;Parent=B;}),p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.new(0,4,0,25);
+Size=UDim2.new(0,200,0,200);
+ZIndex=17;
+Parent=B;
+})
 
-    if Data then
-        for Idx = #Library.Registry, 1, -1 do
-            if Library.Registry[Idx] == Data then
-                table.remove(Library.Registry, Idx);
-            end;
-        end;
+local E=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=18;
+Parent=D;
+})
 
-        for Idx = #Library.HudRegistry, 1, -1 do
-            if Library.HudRegistry[Idx] == Data then
-                table.remove(Library.HudRegistry, Idx);
-            end;
-        end;
+local F=p:Create('ImageLabel',{
+BorderSizePixel=0;
+Size=UDim2.new(1,0,1,0);
+ZIndex=18;
+Image='rbxassetid://4155801252';
+Parent=E;
+})
 
-        Library.RegistryMap[Instance] = nil;
-    end;
-end;
+local G=p:Create('ImageLabel',{
+AnchorPoint=Vector2.new(0.5,0.5);
+Size=UDim2.new(0,6,0,6);
+BackgroundTransparency=1;
+Image='http://www.roblox.com/asset/?id=9619665977';
+ImageColor3=Color3.new(0,0,0);
+ZIndex=19;
+Parent=F;
+})
 
-function Library:UpdateColorsUsingRegistry()
-    -- TODO: Could have an 'active' list of objects
-    -- where the active list only contains Visible objects.
+p:Create('ImageLabel',{
+Size=UDim2.new(0,G.Size.X.Offset-2,0,G.Size.Y.Offset-2);
+Position=UDim2.new(0,1,0,1);
+BackgroundTransparency=1;
+Image='http://www.roblox.com/asset/?id=9619665977';
+ZIndex=20;
+Parent=G;
+})
 
-    -- IMPL: Could setup .Changed events on the AddToRegistry function
-    -- that listens for the 'Visible' propert being changed.
-    -- Visible: true => Add to active list, and call UpdateColors function
-    -- Visible: false => Remove from active list.
+local I=p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.new(0,208,0,25);
+Size=UDim2.new(0,15,0,200);
+ZIndex=17;
+Parent=B;
+})
 
-    -- The above would be especially efficient for a rainbow menu color or live color-changing.
-    -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
+local J=p:Create('Frame',{
+BackgroundColor3=Color3.new(1,1,1);
+BorderSizePixel=0;
+Size=UDim2.new(1,0,1,0);
+ZIndex=18;
+Parent=I;
+})
 
-    for Idx, Object in next, Library.Registry do
-        for Property, ColorIdx in next, Object.Properties do
-            if type(ColorIdx) == 'string' then
-                Object.Instance[Property] = Library[ColorIdx];
-            elseif type(ColorIdx) == 'function' then
-                Object.Instance[Property] = ColorIdx()
-            end
-        end;
-    end;
-end;
+local K,
 
-function Library:GiveSignal(Signal)
-    -- Only used for signals not attached to library instances, as those should be cleaned up on object destruction by Roblox
-    table.insert(Library.Signals, Signal)
+
+
+
+
+
+
+
+L=p:Create('Frame',{BackgroundColor3=Color3.new(1,1,1);AnchorPoint=Vector2.new(0,0.5);BorderColor3=Color3.new(0,0,0);Size=UDim2.new(1,0,0,1);ZIndex=18;Parent=J;}),p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.fromOffset(4,228),
+Size=UDim2.new(0.5,-6,0,20),
+ZIndex=18,
+Parent=B;
+})
+
+local M=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=18,
+Parent=L;
+})
+
+p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,Color3.new(1,1,1)),
+ColorSequenceKeypoint.new(1,Color3.fromRGB(212,212,212))
+});
+Rotation=90;
+Parent=M;
+})
+
+local N=p:Create('TextBox',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,5,0,0);
+Size=UDim2.new(1,-5,1,0);
+Font=p.Font;
+PlaceholderColor3=Color3.fromRGB(190,190,190);
+PlaceholderText='Hex color',
+Text='#FFFFFF',
+TextColor3=p.FontColor;
+TextSize=14;
+TextStrokeTransparency=0;
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=20,
+Parent=M;
+})
+
+p:ApplyTextStroke(N)
+
+local O=p:Create(L:Clone(),{
+Position=UDim2.new(0.5,2,0,228),
+Size=UDim2.new(0.5,-6,0,20),
+Parent=B
+})
+
+local P,
+
+
+
+
+
+Q,R,S=p:Create(O.Frame:FindFirstChild('TextBox'),{Text='255, 255, 255',PlaceholderText='RGB color',TextColor3=p.FontColor}),nil,nil,nil
+
+if v.Transparency then
+Q=p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.fromOffset(4,251);
+Size=UDim2.new(1,-8,0,15);
+ZIndex=19;
+Parent=B;
+})
+
+R=p:Create('Frame',{
+BackgroundColor3=x.Value;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=19;
+Parent=Q;
+})
+
+p:AddToRegistry(R,{BorderColor3='OutlineColor'})
+
+p:Create('ImageLabel',{
+BackgroundTransparency=1;
+Size=UDim2.new(1,0,1,0);
+Image='http://www.roblox.com/asset/?id=12978095818';
+ZIndex=20;
+Parent=R;
+})
+
+S=p:Create('Frame',{
+BackgroundColor3=Color3.new(1,1,1);
+AnchorPoint=Vector2.new(0.5,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(0,1,1,0);
+ZIndex=21;
+Parent=R;
+})
 end
 
-function Library:Unload()
-    -- Unload all of the signals
-    for Idx = #Library.Signals, 1, -1 do
-        local Connection = table.remove(Library.Signals, Idx)
-        Connection:Disconnect()
-    end
+p:CreateLabel({
+Size=UDim2.new(1,0,0,14);
+Position=UDim2.fromOffset(5,5);
+TextXAlignment=Enum.TextXAlignment.Left;
+TextSize=14;
+Text=x.Title,
+TextWrapped=false;
+ZIndex=16;
+Parent=B;
+})
 
-     -- Call our unload callback, maybe to undo some hooks etc
-    if Library.OnUnload then
-        Library.OnUnload()
-    end
 
-    ScreenGui:Destroy()
+local U={}
+do
+U.Options={}
+U.Container=p:Create('Frame',{
+BorderColor3=Color3.new(),
+ZIndex=14,
+
+Visible=false,
+Parent=m
+})
+
+U.Inner=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.fromScale(1,1);
+ZIndex=15;
+Parent=U.Container;
+})
+
+p:Create('UIListLayout',{
+Name='Layout',
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=U.Inner;
+})
+
+p:Create('UIPadding',{
+Name='Padding',
+PaddingLeft=UDim.new(0,4),
+Parent=U.Inner,
+})local updateMenuPosition=function()
+
+
+U.Container.Position=UDim2.fromOffset(
+(y.AbsolutePosition.X+y.AbsoluteSize.X)+4,
+y.AbsolutePosition.Y+1
+)end local updateMenuSize=function()
+
+
+
+local V=60
+for W,X in next,U.Inner:GetChildren()do
+if X:IsA('TextLabel')then
+V=math.max(V,X.TextBounds.X)
+end
 end
 
-function Library:OnUnload(Callback)
-    Library.OnUnload = Callback
+U.Container.Size=UDim2.fromOffset(
+V+8,
+U.Inner.Layout.AbsoluteContentSize.Y+4
+)end
+
+
+y:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateMenuPosition)
+U.Inner.Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(updateMenuSize)
+
+task.spawn(updateMenuPosition)
+task.spawn(updateMenuSize)
+
+p:AddToRegistry(U.Inner,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+function U:Show()
+self.Container.Visible=true
 end
 
-Library:GiveSignal(ScreenGui.DescendantRemoving:Connect(function(Instance)
-    if Library.RegistryMap[Instance] then
-        Library:RemoveFromRegistry(Instance);
-    end;
+function U:Hide()
+self.Container.Visible=false
+end
+
+function U:AddOption(V,W)
+if type(W)~='function'then
+W=function()end
+end
+
+local X=p:CreateLabel({
+Active=false;
+Size=UDim2.new(1,0,0,15);
+TextSize=13;
+Text=V;
+ZIndex=16;
+Parent=self.Inner;
+TextXAlignment=Enum.TextXAlignment.Left,
+})
+
+p:OnHighlight(X,X,
+{TextColor3='AccentColor'},
+{TextColor3='FontColor'}
+)
+
+X.InputBegan:Connect(function(Y)
+if Y.UserInputType~=Enum.UserInputType.MouseButton1 then
+return
+end
+
+W()
+end)
+end
+
+U:AddOption('Copy color',function()
+p.ColorClipboard=x.Value
+p:Notify('Copied color!',2)
+end)
+
+U:AddOption('Paste color',function()
+if not p.ColorClipboard then
+return p:Notify('You have not copied a color!',2)
+end
+x:SetValueRGB(p.ColorClipboard)
+end)
+
+
+U:AddOption('Copy HEX',function()
+pcall(setclipboard,x.Value:ToHex())
+p:Notify('Copied hex code to clipboard!',2)
+end)
+
+U:AddOption('Copy RGB',function()
+pcall(setclipboard,table.concat({math.floor(x.Value.R*255),math.floor(x.Value.G*255),math.floor(x.Value.B*255)},', '))
+p:Notify('Copied RGB values to clipboard!',2)
+end)
+
+end
+
+p:AddToRegistry(B,{BackgroundColor3='BackgroundColor';BorderColor3='OutlineColor';})
+p:AddToRegistry(C,{BackgroundColor3='AccentColor';})
+p:AddToRegistry(E,{BackgroundColor3='BackgroundColor';BorderColor3='OutlineColor';})
+
+p:AddToRegistry(M,{BackgroundColor3='MainColor';BorderColor3='OutlineColor';})
+p:AddToRegistry(O.Frame,{BackgroundColor3='MainColor';BorderColor3='OutlineColor';})
+p:AddToRegistry(P,{TextColor3='FontColor',})
+p:AddToRegistry(N,{TextColor3='FontColor',})
+
+local V={}
+
+for W=0,1,0.1 do
+table.insert(V,ColorSequenceKeypoint.new(W,Color3.fromHSV(W,1,1)))
+end
+
+p:Create('UIGradient',{
+Color=ColorSequence.new(V);
+Rotation=90;
+Parent=J;
+})
+
+N.FocusLost:Connect(function(X)
+if X then
+local Y,Z=pcall(Color3.fromHex,N.Text)
+if Y and typeof(Z)=='Color3'then
+x.Hue,x.Sat,x.Vib=Color3.toHSV(Z)
+end
+end
+
+x:Display()
+end)
+
+P.FocusLost:Connect(function(X)
+if X then
+local Y,Z,_=P.Text:match('(%d+),%s*(%d+),%s*(%d+)')
+if Y and Z and _ then
+x.Hue,x.Sat,x.Vib=Color3.toHSV(Color3.fromRGB(Y,Z,_))
+end
+end
+
+x:Display()
+end)
+
+function x:Display()
+x.Value=Color3.fromHSV(x.Hue,x.Sat,x.Vib)
+F.BackgroundColor3=Color3.fromHSV(x.Hue,1,1)
+
+p:Create(y,{
+BackgroundColor3=x.Value;
+BackgroundTransparency=x.Transparency;
+BorderColor3=p:GetDarkerColor(x.Value);
+})
+
+if R then
+R.BackgroundColor3=x.Value
+S.Position=UDim2.new(1-x.Transparency,0,0,0)
+end
+
+G.Position=UDim2.new(x.Sat,0,1-x.Vib,0)
+K.Position=UDim2.new(0,0,x.Hue,0)
+
+N.Text='#'..x.Value:ToHex()
+P.Text=table.concat({math.floor(x.Value.R*255),math.floor(x.Value.G*255),math.floor(x.Value.B*255)},', ')
+
+p:SafeCallback(x.Callback,x.Value)
+p:SafeCallback(x.Changed,x.Value)
+end
+
+function x:OnChanged(X)
+x.Changed=X
+X(x.Value)
+end
+
+function x:Show()
+for X,Y in next,p.OpenedFrames do
+if X.Name=='Color'then
+X.Visible=false
+p.OpenedFrames[X]=nil
+end
+end
+
+A.Visible=true
+p.OpenedFrames[A]=true
+end
+
+function x:Hide()
+A.Visible=false
+p.OpenedFrames[A]=nil
+end
+
+function x:SetValue(X,Y)
+local Z=Color3.fromHSV(X[1],X[2],X[3])
+
+x.Transparency=Y or 0
+x:SetHSVFromRGB(Z)
+x:Display()
+end
+
+function x:SetValueRGB(X,Y)
+x.Transparency=Y or 0
+x:SetHSVFromRGB(X)
+x:Display()
+end
+
+F.InputBegan:Connect(function(X)
+if X.UserInputType==Enum.UserInputType.MouseButton1 then
+while c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)do
+local Y=F.AbsolutePosition.X
+local Z=Y+F.AbsoluteSize.X
+local _,
+
+aa=math.clamp(l.X,Y,Z),F.AbsolutePosition.Y
+local ab=aa+F.AbsoluteSize.Y
+local ac=math.clamp(l.Y,aa,ab)
+
+x.Sat=(_-Y)/(Z-Y)
+x.Vib=1-((ac-aa)/(ab-aa))
+x:Display()
+
+j:Wait()
+end
+
+p:AttemptSave()
+end
+end)
+
+J.InputBegan:Connect(function(aa)
+if aa.UserInputType==Enum.UserInputType.MouseButton1 then
+while c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)do
+local ab=J.AbsolutePosition.Y
+local ac=ab+J.AbsoluteSize.Y
+local X=math.clamp(l.Y,ab,ac)
+
+x.Hue=((X-ab)/(ac-ab))
+x:Display()
+
+j:Wait()
+end
+
+p:AttemptSave()
+end
+end)
+
+y.InputBegan:Connect(function(aa)
+if aa.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+if A.Visible then
+x:Hide()
+else
+U:Hide()
+x:Show()
+end
+elseif aa.UserInputType==Enum.UserInputType.MouseButton2 and not p:MouseIsOverOpenedFrame()then
+U:Show()
+x:Hide()
+end
+end)
+
+if R then
+R.InputBegan:Connect(function(aa)
+if aa.UserInputType==Enum.UserInputType.MouseButton1 then
+while c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)do
+local ab=R.AbsolutePosition.X
+local ac=ab+R.AbsoluteSize.X
+local X=math.clamp(l.X,ab,ac)
+
+x.Transparency=1-((X-ab)/(ac-ab))
+
+x:Display()
+
+j:Wait()
+end
+
+p:AttemptSave()
+end
+end)
+end
+
+p:GiveSignal(c.InputBegan:Connect(function(aa)
+if aa.UserInputType==Enum.UserInputType.MouseButton1 then
+local ab,ac=A.AbsolutePosition,A.AbsoluteSize
+
+if l.X<ab.X or l.X>ab.X+ac.X
+or l.Y<(ab.Y-20-1)or l.Y>ab.Y+ac.Y then
+
+x:Hide()
+end
+
+if not p:IsMouseOverFrame(U.Container)then
+U:Hide()
+end
+end
+
+if aa.UserInputType==Enum.UserInputType.MouseButton2 and U.Container.Visible then
+if not p:IsMouseOverFrame(U.Container)and not p:IsMouseOverFrame(y)then
+U:Hide()
+end
+end
 end))
 
-local BaseAddons = {};
+x:Display()
+x.DisplayFrame=y
 
-do
-    local Funcs = {};
+o[u]=x
 
-    function Funcs:AddColorPicker(Idx, Info)
-        local ToggleLabel = self.TextLabel;
-        -- local Container = self.Container;
-
-        assert(Info.Default, 'AddColorPicker: Missing default value.');
-
-        local ColorPicker = {
-            Value = Info.Default;
-            Transparency = Info.Transparency or 0;
-            Type = 'ColorPicker';
-            Title = type(Info.Title) == 'string' and Info.Title or 'Color picker',
-            Callback = Info.Callback or function(Color) end;
-        };
-
-        function ColorPicker:SetHSVFromRGB(Color)
-            local H, S, V = Color3.toHSV(Color);
-
-            ColorPicker.Hue = H;
-            ColorPicker.Sat = S;
-            ColorPicker.Vib = V;
-        end;
-
-        ColorPicker:SetHSVFromRGB(ColorPicker.Value);
-
-        local DisplayFrame = Library:Create('Frame', {
-            BackgroundColor3 = ColorPicker.Value;
-            BorderColor3 = Library:GetDarkerColor(ColorPicker.Value);
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(0, 28, 0, 14);
-            ZIndex = 6;
-            Parent = ToggleLabel;
-        });
-
-        -- Transparency image taken from https://github.com/matas3535/SplixPrivateDrawingLibrary/blob/main/Library.lua cus i'm lazy
-        local CheckerFrame = Library:Create('ImageLabel', {
-            BorderSizePixel = 0;
-            Size = UDim2.new(0, 27, 0, 13);
-            ZIndex = 5;
-            Image = 'http://www.roblox.com/asset/?id=12977615774';
-            Visible = not not Info.Transparency;
-            Parent = DisplayFrame;
-        });
-
-        -- 1/16/23
-        -- Rewrote this to be placed inside the Library ScreenGui
-        -- There was some issue which caused RelativeOffset to be way off
-        -- Thus the color picker would never show
-
-        local PickerFrameOuter = Library:Create('Frame', {
-            Name = 'Color';
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18),
-            Size = UDim2.fromOffset(230, Info.Transparency and 271 or 253);
-            Visible = false;
-            ZIndex = 15;
-            Parent = ScreenGui,
-        });
-
-        DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-            PickerFrameOuter.Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18);
-        end)
-
-        local PickerFrameInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 16;
-            Parent = PickerFrameOuter;
-        });
-
-        local Highlight = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 0, 2);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local SatVibMapOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.new(0, 4, 0, 25);
-            Size = UDim2.new(0, 200, 0, 200);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local SatVibMapInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Parent = SatVibMapOuter;
-        });
-
-        local SatVibMap = Library:Create('ImageLabel', {
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Image = 'rbxassetid://4155801252';
-            Parent = SatVibMapInner;
-        });
-
-        local CursorOuter = Library:Create('ImageLabel', {
-            AnchorPoint = Vector2.new(0.5, 0.5);
-            Size = UDim2.new(0, 6, 0, 6);
-            BackgroundTransparency = 1;
-            Image = 'http://www.roblox.com/asset/?id=9619665977';
-            ImageColor3 = Color3.new(0, 0, 0);
-            ZIndex = 19;
-            Parent = SatVibMap;
-        });
-
-        local CursorInner = Library:Create('ImageLabel', {
-            Size = UDim2.new(0, CursorOuter.Size.X.Offset - 2, 0, CursorOuter.Size.Y.Offset - 2);
-            Position = UDim2.new(0, 1, 0, 1);
-            BackgroundTransparency = 1;
-            Image = 'http://www.roblox.com/asset/?id=9619665977';
-            ZIndex = 20;
-            Parent = CursorOuter;
-        })
-
-        local HueSelectorOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.new(0, 208, 0, 25);
-            Size = UDim2.new(0, 15, 0, 200);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local HueSelectorInner = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Parent = HueSelectorOuter;
-        });
-
-        local HueCursor = Library:Create('Frame', { 
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            AnchorPoint = Vector2.new(0, 0.5);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, 0, 0, 1);
-            ZIndex = 18;
-            Parent = HueSelectorInner;
-        });
-
-        local HueBoxOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.fromOffset(4, 228),
-            Size = UDim2.new(0.5, -6, 0, 20),
-            ZIndex = 18,
-            Parent = PickerFrameInner;
-        });
-
-        local HueBoxInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18,
-            Parent = HueBoxOuter;
-        });
-
-        Library:Create('UIGradient', {
-            Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-            });
-            Rotation = 90;
-            Parent = HueBoxInner;
-        });
-
-        local HueBox = Library:Create('TextBox', {
-            BackgroundTransparency = 1;
-            Position = UDim2.new(0, 5, 0, 0);
-            Size = UDim2.new(1, -5, 1, 0);
-            Font = Library.Font;
-            PlaceholderColor3 = Color3.fromRGB(190, 190, 190);
-            PlaceholderText = 'Hex color',
-            Text = '#FFFFFF',
-            TextColor3 = Library.FontColor;
-            TextSize = 14;
-            TextStrokeTransparency = 0;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            ZIndex = 20,
-            Parent = HueBoxInner;
-        });
-
-        Library:ApplyTextStroke(HueBox);
-
-        local RgbBoxBase = Library:Create(HueBoxOuter:Clone(), {
-            Position = UDim2.new(0.5, 2, 0, 228),
-            Size = UDim2.new(0.5, -6, 0, 20),
-            Parent = PickerFrameInner
-        });
-
-        local RgbBox = Library:Create(RgbBoxBase.Frame:FindFirstChild('TextBox'), {
-            Text = '255, 255, 255',
-            PlaceholderText = 'RGB color',
-            TextColor3 = Library.FontColor
-        });
-
-        local TransparencyBoxOuter, TransparencyBoxInner, TransparencyCursor;
-        
-        if Info.Transparency then 
-            TransparencyBoxOuter = Library:Create('Frame', {
-                BorderColor3 = Color3.new(0, 0, 0);
-                Position = UDim2.fromOffset(4, 251);
-                Size = UDim2.new(1, -8, 0, 15);
-                ZIndex = 19;
-                Parent = PickerFrameInner;
-            });
-
-            TransparencyBoxInner = Library:Create('Frame', {
-                BackgroundColor3 = ColorPicker.Value;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.new(1, 0, 1, 0);
-                ZIndex = 19;
-                Parent = TransparencyBoxOuter;
-            });
-
-            Library:AddToRegistry(TransparencyBoxInner, { BorderColor3 = 'OutlineColor' });
-
-            Library:Create('ImageLabel', {
-                BackgroundTransparency = 1;
-                Size = UDim2.new(1, 0, 1, 0);
-                Image = 'http://www.roblox.com/asset/?id=12978095818';
-                ZIndex = 20;
-                Parent = TransparencyBoxInner;
-            });
-
-            TransparencyCursor = Library:Create('Frame', { 
-                BackgroundColor3 = Color3.new(1, 1, 1);
-                AnchorPoint = Vector2.new(0.5, 0);
-                BorderColor3 = Color3.new(0, 0, 0);
-                Size = UDim2.new(0, 1, 1, 0);
-                ZIndex = 21;
-                Parent = TransparencyBoxInner;
-            });
-        end;
-
-        local DisplayLabel = Library:CreateLabel({
-            Size = UDim2.new(1, 0, 0, 14);
-            Position = UDim2.fromOffset(5, 5);
-            TextXAlignment = Enum.TextXAlignment.Left;
-            TextSize = 14;
-            Text = ColorPicker.Title,--Info.Default;
-            TextWrapped = false;
-            ZIndex = 16;
-            Parent = PickerFrameInner;
-        });
-
-
-        local ContextMenu = {}
-        do
-            ContextMenu.Options = {}
-            ContextMenu.Container = Library:Create('Frame', {
-                BorderColor3 = Color3.new(),
-                ZIndex = 14,
-
-                Visible = false,
-                Parent = ScreenGui
-            })
-
-            ContextMenu.Inner = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.fromScale(1, 1);
-                ZIndex = 15;
-                Parent = ContextMenu.Container;
-            });
-
-            Library:Create('UIListLayout', {
-                Name = 'Layout',
-                FillDirection = Enum.FillDirection.Vertical;
-                SortOrder = Enum.SortOrder.LayoutOrder;
-                Parent = ContextMenu.Inner;
-            });
-
-            Library:Create('UIPadding', {
-                Name = 'Padding',
-                PaddingLeft = UDim.new(0, 4),
-                Parent = ContextMenu.Inner,
-            });
-
-            local function updateMenuPosition()
-                ContextMenu.Container.Position = UDim2.fromOffset(
-                    (DisplayFrame.AbsolutePosition.X + DisplayFrame.AbsoluteSize.X) + 4,
-                    DisplayFrame.AbsolutePosition.Y + 1
-                )
-            end
-
-            local function updateMenuSize()
-                local menuWidth = 60
-                for i, label in next, ContextMenu.Inner:GetChildren() do
-                    if label:IsA('TextLabel') then
-                        menuWidth = math.max(menuWidth, label.TextBounds.X)
-                    end
-                end
-
-                ContextMenu.Container.Size = UDim2.fromOffset(
-                    menuWidth + 8,
-                    ContextMenu.Inner.Layout.AbsoluteContentSize.Y + 4
-                )
-            end
-
-            DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateMenuPosition)
-            ContextMenu.Inner.Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(updateMenuSize)
-
-            task.spawn(updateMenuPosition)
-            task.spawn(updateMenuSize)
-
-            Library:AddToRegistry(ContextMenu.Inner, {
-                BackgroundColor3 = 'BackgroundColor';
-                BorderColor3 = 'OutlineColor';
-            });
-
-            function ContextMenu:Show()
-                self.Container.Visible = true
-            end
-
-            function ContextMenu:Hide()
-                self.Container.Visible = false
-            end
-
-            function ContextMenu:AddOption(Str, Callback)
-                if type(Callback) ~= 'function' then
-                    Callback = function() end
-                end
-
-                local Button = Library:CreateLabel({
-                    Active = false;
-                    Size = UDim2.new(1, 0, 0, 15);
-                    TextSize = 13;
-                    Text = Str;
-                    ZIndex = 16;
-                    Parent = self.Inner;
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                });
-
-                Library:OnHighlight(Button, Button, 
-                    { TextColor3 = 'AccentColor' },
-                    { TextColor3 = 'FontColor' }
-                );
-
-                Button.InputBegan:Connect(function(Input)
-                    if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-                        return
-                    end
-
-                    Callback()
-                end)
-            end
-
-            ContextMenu:AddOption('Copy color', function()
-                Library.ColorClipboard = ColorPicker.Value
-                Library:Notify('Copied color!', 2)
-            end)
-
-            ContextMenu:AddOption('Paste color', function()
-                if not Library.ColorClipboard then
-                    return Library:Notify('You have not copied a color!', 2)
-                end
-                ColorPicker:SetValueRGB(Library.ColorClipboard)
-            end)
-
-
-            ContextMenu:AddOption('Copy HEX', function()
-                pcall(setclipboard, ColorPicker.Value:ToHex())
-                Library:Notify('Copied hex code to clipboard!', 2)
-            end)
-
-            ContextMenu:AddOption('Copy RGB', function()
-                pcall(setclipboard, table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', '))
-                Library:Notify('Copied RGB values to clipboard!', 2)
-            end)
-
-        end
-
-        Library:AddToRegistry(PickerFrameInner, { BackgroundColor3 = 'BackgroundColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(Highlight, { BackgroundColor3 = 'AccentColor'; });
-        Library:AddToRegistry(SatVibMapInner, { BackgroundColor3 = 'BackgroundColor'; BorderColor3 = 'OutlineColor'; });
-
-        Library:AddToRegistry(HueBoxInner, { BackgroundColor3 = 'MainColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(RgbBoxBase.Frame, { BackgroundColor3 = 'MainColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(RgbBox, { TextColor3 = 'FontColor', });
-        Library:AddToRegistry(HueBox, { TextColor3 = 'FontColor', });
-
-        local SequenceTable = {};
-
-        for Hue = 0, 1, 0.1 do
-            table.insert(SequenceTable, ColorSequenceKeypoint.new(Hue, Color3.fromHSV(Hue, 1, 1)));
-        end;
-
-        local HueSelectorGradient = Library:Create('UIGradient', {
-            Color = ColorSequence.new(SequenceTable);
-            Rotation = 90;
-            Parent = HueSelectorInner;
-        });
-
-        HueBox.FocusLost:Connect(function(enter)
-            if enter then
-                local success, result = pcall(Color3.fromHex, HueBox.Text)
-                if success and typeof(result) == 'Color3' then
-                    ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = Color3.toHSV(result)
-                end
-            end
-
-            ColorPicker:Display()
-        end)
-
-        RgbBox.FocusLost:Connect(function(enter)
-            if enter then
-                local r, g, b = RgbBox.Text:match('(%d+),%s*(%d+),%s*(%d+)')
-                if r and g and b then
-                    ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = Color3.toHSV(Color3.fromRGB(r, g, b))
-                end
-            end
-
-            ColorPicker:Display()
-        end)
-
-        function ColorPicker:Display()
-            ColorPicker.Value = Color3.fromHSV(ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib);
-            SatVibMap.BackgroundColor3 = Color3.fromHSV(ColorPicker.Hue, 1, 1);
-
-            Library:Create(DisplayFrame, {
-                BackgroundColor3 = ColorPicker.Value;
-                BackgroundTransparency = ColorPicker.Transparency;
-                BorderColor3 = Library:GetDarkerColor(ColorPicker.Value);
-            });
-
-            if TransparencyBoxInner then
-                TransparencyBoxInner.BackgroundColor3 = ColorPicker.Value;
-                TransparencyCursor.Position = UDim2.new(1 - ColorPicker.Transparency, 0, 0, 0);
-            end;
-
-            CursorOuter.Position = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
-            HueCursor.Position = UDim2.new(0, 0, ColorPicker.Hue, 0);
-
-            HueBox.Text = '#' .. ColorPicker.Value:ToHex()
-            RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
-
-            Library:SafeCallback(ColorPicker.Callback, ColorPicker.Value);
-            Library:SafeCallback(ColorPicker.Changed, ColorPicker.Value);
-        end;
-
-        function ColorPicker:OnChanged(Func)
-            ColorPicker.Changed = Func;
-            Func(ColorPicker.Value)
-        end;
-
-        function ColorPicker:Show()
-            for Frame, Val in next, Library.OpenedFrames do
-                if Frame.Name == 'Color' then
-                    Frame.Visible = false;
-                    Library.OpenedFrames[Frame] = nil;
-                end;
-            end;
-
-            PickerFrameOuter.Visible = true;
-            Library.OpenedFrames[PickerFrameOuter] = true;
-        end;
-
-        function ColorPicker:Hide()
-            PickerFrameOuter.Visible = false;
-            Library.OpenedFrames[PickerFrameOuter] = nil;
-        end;
-
-        function ColorPicker:SetValue(HSV, Transparency)
-            local Color = Color3.fromHSV(HSV[1], HSV[2], HSV[3]);
-
-            ColorPicker.Transparency = Transparency or 0;
-            ColorPicker:SetHSVFromRGB(Color);
-            ColorPicker:Display();
-        end;
-
-        function ColorPicker:SetValueRGB(Color, Transparency)
-            ColorPicker.Transparency = Transparency or 0;
-            ColorPicker:SetHSVFromRGB(Color);
-            ColorPicker:Display();
-        end;
-
-        SatVibMap.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local MinX = SatVibMap.AbsolutePosition.X;
-                    local MaxX = MinX + SatVibMap.AbsoluteSize.X;
-                    local MouseX = math.clamp(Mouse.X, MinX, MaxX);
-
-                    local MinY = SatVibMap.AbsolutePosition.Y;
-                    local MaxY = MinY + SatVibMap.AbsoluteSize.Y;
-                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
-
-                    ColorPicker.Sat = (MouseX - MinX) / (MaxX - MinX);
-                    ColorPicker.Vib = 1 - ((MouseY - MinY) / (MaxY - MinY));
-                    ColorPicker:Display();
-
-                    RenderStepped:Wait();
-                end;
-
-                Library:AttemptSave();
-            end;
-        end);
-
-        HueSelectorInner.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local MinY = HueSelectorInner.AbsolutePosition.Y;
-                    local MaxY = MinY + HueSelectorInner.AbsoluteSize.Y;
-                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
-
-                    ColorPicker.Hue = ((MouseY - MinY) / (MaxY - MinY));
-                    ColorPicker:Display();
-
-                    RenderStepped:Wait();
-                end;
-
-                Library:AttemptSave();
-            end;
-        end);
-
-        DisplayFrame.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                if PickerFrameOuter.Visible then
-                    ColorPicker:Hide()
-                else
-                    ContextMenu:Hide()
-                    ColorPicker:Show()
-                end;
-            elseif Input.UserInputType == Enum.UserInputType.MouseButton2 and not Library:MouseIsOverOpenedFrame() then
-                ContextMenu:Show()
-                ColorPicker:Hide()
-            end
-        end);
-
-        if TransparencyBoxInner then
-            TransparencyBoxInner.InputBegan:Connect(function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                        local MinX = TransparencyBoxInner.AbsolutePosition.X;
-                        local MaxX = MinX + TransparencyBoxInner.AbsoluteSize.X;
-                        local MouseX = math.clamp(Mouse.X, MinX, MaxX);
-
-                        ColorPicker.Transparency = 1 - ((MouseX - MinX) / (MaxX - MinX));
-
-                        ColorPicker:Display();
-
-                        RenderStepped:Wait();
-                    end;
-
-                    Library:AttemptSave();
-                end;
-            end);
-        end;
-
-        Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = PickerFrameOuter.AbsolutePosition, PickerFrameOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    ColorPicker:Hide();
-                end;
-
-                if not Library:IsMouseOverFrame(ContextMenu.Container) then
-                    ContextMenu:Hide()
-                end
-            end;
-
-            if Input.UserInputType == Enum.UserInputType.MouseButton2 and ContextMenu.Container.Visible then
-                if not Library:IsMouseOverFrame(ContextMenu.Container) and not Library:IsMouseOverFrame(DisplayFrame) then
-                    ContextMenu:Hide()
-                end
-            end
-        end))
-
-        ColorPicker:Display();
-        ColorPicker.DisplayFrame = DisplayFrame
-
-        Options[Idx] = ColorPicker;
-
-        return self;
-    end;
-
-    function Funcs:AddKeyPicker(Idx, Info)
-        local ParentObj = self;
-        local ToggleLabel = self.TextLabel;
-        local Container = self.Container;
-
-        assert(Info.Default, 'AddKeyPicker: Missing default value.');
-
-        local KeyPicker = {
-            Value = Info.Default;
-            Toggled = false;
-            Mode = Info.Mode or 'Toggle'; -- Always, Toggle, Hold
-            Type = 'KeyPicker';
-            Callback = Info.Callback or function(Value) end;
-            ChangedCallback = Info.ChangedCallback or function(New) end;
-
-            SyncToggleState = Info.SyncToggleState or false;
-        };
-
-        if KeyPicker.SyncToggleState then
-            Info.Modes = { 'Toggle' }
-            Info.Mode = 'Toggle'
-        end
-
-        local PickOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(0, 28, 0, 15);
-            ZIndex = 6;
-            Parent = ToggleLabel;
-        });
-
-        local PickInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 7;
-            Parent = PickOuter;
-        });
-
-        Library:AddToRegistry(PickInner, {
-            BackgroundColor3 = 'BackgroundColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        local DisplayLabel = Library:CreateLabel({
-            Size = UDim2.new(1, 0, 1, 0);
-            TextSize = 13;
-            Text = Info.Default;
-            TextWrapped = true;
-            ZIndex = 8;
-            Parent = PickInner;
-        });
-
-        local ModeSelectOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.fromOffset(ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4, ToggleLabel.AbsolutePosition.Y + 1);
-            Size = UDim2.new(0, 60, 0, 45 + 2);
-            Visible = false;
-            ZIndex = 14;
-            Parent = ScreenGui;
-        });
-
-        ToggleLabel:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-            ModeSelectOuter.Position = UDim2.fromOffset(ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4, ToggleLabel.AbsolutePosition.Y + 1);
-        end);
-
-        local ModeSelectInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 15;
-            Parent = ModeSelectOuter;
-        });
-
-        Library:AddToRegistry(ModeSelectInner, {
-            BackgroundColor3 = 'BackgroundColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        Library:Create('UIListLayout', {
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            Parent = ModeSelectInner;
-        });
-
-        local ContainerLabel = Library:CreateLabel({
-            TextXAlignment = Enum.TextXAlignment.Left;
-            Size = UDim2.new(1, 0, 0, 18);
-            TextSize = 13;
-            Visible = false;
-            ZIndex = 110;
-            Parent = Library.KeybindContainer;
-        },  true);
-
-        local Modes = Info.Modes or { 'Always', 'Toggle', 'Hold' };
-        local ModeButtons = {};
-
-        for Idx, Mode in next, Modes do
-            local ModeButton = {};
-
-            local Label = Library:CreateLabel({
-                Active = false;
-                Size = UDim2.new(1, 0, 0, 15);
-                TextSize = 13;
-                Text = Mode;
-                ZIndex = 16;
-                Parent = ModeSelectInner;
-            });
-
-            function ModeButton:Select()
-                for _, Button in next, ModeButtons do
-                    Button:Deselect();
-                end;
-
-                KeyPicker.Mode = Mode;
-
-                Label.TextColor3 = Library.AccentColor;
-                Library.RegistryMap[Label].Properties.TextColor3 = 'AccentColor';
-
-                ModeSelectOuter.Visible = false;
-            end;
-
-            function ModeButton:Deselect()
-                KeyPicker.Mode = nil;
-
-                Label.TextColor3 = Library.FontColor;
-                Library.RegistryMap[Label].Properties.TextColor3 = 'FontColor';
-            end;
-
-            Label.InputBegan:Connect(function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    ModeButton:Select();
-                    Library:AttemptSave();
-                end;
-            end);
-
-            if Mode == KeyPicker.Mode then
-                ModeButton:Select();
-            end;
-
-            ModeButtons[Mode] = ModeButton;
-        end;
-
-        function KeyPicker:Update()
-            if Info.NoUI then
-                return;
-            end;
-
-            local State = KeyPicker:GetState();
-
-            ContainerLabel.Text = string.format('[%s] %s (%s)', KeyPicker.Value, Info.Text, KeyPicker.Mode);
-
-            ContainerLabel.Visible = true;
-            ContainerLabel.TextColor3 = State and Library.AccentColor or Library.FontColor;
-
-            Library.RegistryMap[ContainerLabel].Properties.TextColor3 = State and 'AccentColor' or 'FontColor';
-
-            local YSize = 0
-            local XSize = 0
-
-            for _, Label in next, Library.KeybindContainer:GetChildren() do
-                if Label:IsA('TextLabel') and Label.Visible then
-                    YSize = YSize + 18;
-                    if (Label.TextBounds.X > XSize) then
-                        XSize = Label.TextBounds.X
-                    end
-                end;
-            end;
-
-            Library.KeybindFrame.Size = UDim2.new(0, math.max(XSize + 10, 210), 0, YSize + 23)
-        end;
-
-        function KeyPicker:GetState()
-            if KeyPicker.Mode == 'Always' then
-                return true;
-            elseif KeyPicker.Mode == 'Hold' then
-                if KeyPicker.Value == 'None' then
-                    return false;
-                end
-
-                local Key = KeyPicker.Value;
-
-                if Key == 'MB1' or Key == 'MB2' then
-                    return Key == 'MB1' and InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
-                        or Key == 'MB2' and InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2);
-                else
-                    return InputService:IsKeyDown(Enum.KeyCode[KeyPicker.Value]);
-                end;
-            else
-                return KeyPicker.Toggled;
-            end;
-        end;
-
-        function KeyPicker:SetValue(Data)
-            local Key, Mode = Data[1], Data[2];
-            DisplayLabel.Text = Key;
-            KeyPicker.Value = Key;
-            ModeButtons[Mode]:Select();
-            KeyPicker:Update();
-        end;
-
-        function KeyPicker:OnClick(Callback)
-            KeyPicker.Clicked = Callback
-        end
-
-        function KeyPicker:OnChanged(Callback)
-            KeyPicker.Changed = Callback
-            Callback(KeyPicker.Value)
-        end
-
-        if ParentObj.Addons then
-            table.insert(ParentObj.Addons, KeyPicker)
-        end
-
-        function KeyPicker:DoClick()
-            if ParentObj.Type == 'Toggle' and KeyPicker.SyncToggleState then
-                ParentObj:SetValue(not ParentObj.Value)
-            end
-
-            Library:SafeCallback(KeyPicker.Callback, KeyPicker.Toggled)
-            Library:SafeCallback(KeyPicker.Clicked, KeyPicker.Toggled)
-        end
-
-        local Picking = false;
-
-        PickOuter.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                Picking = true;
-
-                DisplayLabel.Text = '';
-
-                local Break;
-                local Text = '';
-
-                task.spawn(function()
-                    while (not Break) do
-                        if Text == '...' then
-                            Text = '';
-                        end;
-
-                        Text = Text .. '.';
-                        DisplayLabel.Text = Text;
-
-                        wait(0.4);
-                    end;
-                end);
-
-                wait(0.2);
-
-                local Event;
-                Event = InputService.InputBegan:Connect(function(Input)
-                    local Key;
-
-                    if Input.UserInputType == Enum.UserInputType.Keyboard then
-                        Key = Input.KeyCode.Name;
-                    elseif Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        Key = 'MB1';
-                    elseif Input.UserInputType == Enum.UserInputType.MouseButton2 then
-                        Key = 'MB2';
-                    end;
-
-                    Break = true;
-                    Picking = false;
-
-                    DisplayLabel.Text = Key;
-                    KeyPicker.Value = Key;
-
-                    Library:SafeCallback(KeyPicker.ChangedCallback, Input.KeyCode or Input.UserInputType)
-                    Library:SafeCallback(KeyPicker.Changed, Input.KeyCode or Input.UserInputType)
-
-                    Library:AttemptSave();
-
-                    Event:Disconnect();
-                end);
-            elseif Input.UserInputType == Enum.UserInputType.MouseButton2 and not Library:MouseIsOverOpenedFrame() then
-                ModeSelectOuter.Visible = true;
-            end;
-        end);
-
-        Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
-            if (not Picking) then
-                if KeyPicker.Mode == 'Toggle' then
-                    local Key = KeyPicker.Value;
-
-                    if Key == 'MB1' or Key == 'MB2' then
-                        if Key == 'MB1' and Input.UserInputType == Enum.UserInputType.MouseButton1
-                        or Key == 'MB2' and Input.UserInputType == Enum.UserInputType.MouseButton2 then
-                            KeyPicker.Toggled = not KeyPicker.Toggled
-                            KeyPicker:DoClick()
-                        end;
-                    elseif Input.UserInputType == Enum.UserInputType.Keyboard then
-                        if Input.KeyCode.Name == Key then
-                            KeyPicker.Toggled = not KeyPicker.Toggled;
-                            KeyPicker:DoClick()
-                        end;
-                    end;
-                end;
-
-                KeyPicker:Update();
-            end;
-
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = ModeSelectOuter.AbsolutePosition, ModeSelectOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    ModeSelectOuter.Visible = false;
-                end;
-            end;
-        end))
-
-        Library:GiveSignal(InputService.InputEnded:Connect(function(Input)
-            if (not Picking) then
-                KeyPicker:Update();
-            end;
-        end))
-
-        KeyPicker:Update();
-
-        Options[Idx] = KeyPicker;
-
-        return self;
-    end;
-
-    BaseAddons.__index = Funcs;
-    BaseAddons.__namecall = function(Table, Key, ...)
-        return Funcs[Key](...);
-    end;
-end;
-
-local BaseGroupbox = {};
-
-do
-    local Funcs = {};
-
-    function Funcs:AddBlank(Size)
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        Library:Create('Frame', {
-            BackgroundTransparency = 1;
-            Size = UDim2.new(1, 0, 0, Size);
-            ZIndex = 1;
-            Parent = Container;
-        });
-    end;
-
-    function Funcs:AddLabel(Text, DoesWrap)
-        local Label = {};
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local TextLabel = Library:CreateLabel({
-            Size = UDim2.new(1, -4, 0, 15);
-            TextSize = 14;
-            Text = Text;
-            TextWrapped = DoesWrap or false,
-            TextXAlignment = Enum.TextXAlignment.Left;
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        if DoesWrap then
-            local Y = select(2, Library:GetTextBounds(Text, Library.Font, 14, Vector2.new(TextLabel.AbsoluteSize.X, math.huge)))
-            TextLabel.Size = UDim2.new(1, -4, 0, Y)
-        else
-            Library:Create('UIListLayout', {
-                Padding = UDim.new(0, 4);
-                FillDirection = Enum.FillDirection.Horizontal;
-                HorizontalAlignment = Enum.HorizontalAlignment.Right;
-                SortOrder = Enum.SortOrder.LayoutOrder;
-                Parent = TextLabel;
-            });
-        end
-
-        Label.TextLabel = TextLabel;
-        Label.Container = Container;
-
-        function Label:SetText(Text)
-            TextLabel.Text = Text
-
-            if DoesWrap then
-                local Y = select(2, Library:GetTextBounds(Text, Library.Font, 14, Vector2.new(TextLabel.AbsoluteSize.X, math.huge)))
-                TextLabel.Size = UDim2.new(1, -4, 0, Y)
-            end
-
-            Groupbox:Resize();
-        end
-
-        if (not DoesWrap) then
-            setmetatable(Label, BaseAddons);
-        end
-
-        Groupbox:AddBlank(5);
-        Groupbox:Resize();
-
-        return Label;
-    end;
-
-    function Funcs:AddSpacer(Height)
-        local Spacer = {};
-    
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local SpacerFrame = Library:Create('Frame', {
-            Size = UDim2.new(1, -4, 0, Height or 10); 
-            BackgroundTransparency = 1; 
-            Parent = Container;
-            ZIndex = 5;
-        });
-    
-        Spacer.Frame = SpacerFrame;
-        Spacer.Container = Container;
-
-        function Spacer:SetHeight(newHeight)
-            SpacerFrame.Size = UDim2.new(1, -4, 0, newHeight);
-            Groupbox:Resize();
-        end
-        
-        Groupbox:AddBlank(5);
-        Groupbox:Resize();
-    
-        return Spacer;
-    end
-    
-    
-
-    function Funcs:AddButton(...)
-        -- TODO: Eventually redo this
-        local Button = {};
-        local function ProcessButtonParams(Class, Obj, ...)
-            local Props = select(1, ...)
-            if type(Props) == 'table' then
-                Obj.Text = Props.Text
-                Obj.Func = Props.Func
-                Obj.DoubleClick = Props.DoubleClick
-                Obj.Tooltip = Props.Tooltip
-            else
-                Obj.Text = select(1, ...)
-                Obj.Func = select(2, ...)
-            end
-
-            assert(type(Obj.Func) == 'function', 'AddButton: `Func` callback is missing.');
-        end
-
-        ProcessButtonParams('Button', Button, ...)
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local function CreateBaseButton(Button)
-            local Outer = Library:Create('Frame', {
-                BackgroundColor3 = Color3.new(0, 0, 0);
-                BorderColor3 = Color3.new(0, 0, 0);
-                Size = UDim2.new(1, -4, 0, 20);
-                ZIndex = 5;
-            });
-
-            local Inner = Library:Create('Frame', {
-                BackgroundColor3 = Library.MainColor;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.new(1, 0, 1, 0);
-                ZIndex = 6;
-                Parent = Outer;
-            });
-
-            local Label = Library:CreateLabel({
-                Size = UDim2.new(1, 0, 1, 0);
-                TextSize = 14;
-                Text = Button.Text;
-                ZIndex = 6;
-                Parent = Inner;
-            });
-
-            Library:Create('UIGradient', {
-                Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-                });
-                Rotation = 90;
-                Parent = Inner;
-            });
-
-            Library:AddToRegistry(Outer, {
-                BorderColor3 = 'Black';
-            });
-
-            Library:AddToRegistry(Inner, {
-                BackgroundColor3 = 'MainColor';
-                BorderColor3 = 'OutlineColor';
-            });
-
-            Library:OnHighlight(Outer, Outer,
-                { BorderColor3 = 'AccentColor' },
-                { BorderColor3 = 'Black' }
-            );
-
-            return Outer, Inner, Label
-        end
-
-        local function InitEvents(Button)
-            local function WaitForEvent(event, timeout, validator)
-                local bindable = Instance.new('BindableEvent')
-                local connection = event:Once(function(...)
-
-                    if type(validator) == 'function' and validator(...) then
-                        bindable:Fire(true)
-                    else
-                        bindable:Fire(false)
-                    end
-                end)
-                task.delay(timeout, function()
-                    connection:disconnect()
-                    bindable:Fire(false)
-                end)
-                return bindable.Event:Wait()
-            end
-
-            local function ValidateClick(Input)
-                if Library:MouseIsOverOpenedFrame() then
-                    return false
-                end
-
-                if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-                    return false
-                end
-
-                return true
-            end
-
-            Button.Outer.InputBegan:Connect(function(Input)
-                if not ValidateClick(Input) then return end
-                if Button.Locked then return end
-
-                if Button.DoubleClick then
-                    Library:RemoveFromRegistry(Button.Label)
-                    Library:AddToRegistry(Button.Label, { TextColor3 = 'AccentColor' })
-
-                    Button.Label.TextColor3 = Library.AccentColor
-                    Button.Label.Text = 'Are you sure?'
-                    Button.Locked = true
-
-                    local clicked = WaitForEvent(Button.Outer.InputBegan, 0.5, ValidateClick)
-
-                    Library:RemoveFromRegistry(Button.Label)
-                    Library:AddToRegistry(Button.Label, { TextColor3 = 'FontColor' })
-
-                    Button.Label.TextColor3 = Library.FontColor
-                    Button.Label.Text = Button.Text
-                    task.defer(rawset, Button, 'Locked', false)
-
-                    if clicked then
-                        Library:SafeCallback(Button.Func)
-                    end
-
-                    return
-                end
-
-                Library:SafeCallback(Button.Func);
-            end)
-        end
-
-        Button.Outer, Button.Inner, Button.Label = CreateBaseButton(Button)
-        Button.Outer.Parent = Container
-
-        InitEvents(Button)
-
-        function Button:AddTooltip(tooltip)
-            if type(tooltip) == 'string' then
-                Library:AddToolTip(tooltip, self.Outer)
-            end
-            return self
-        end
-
-
-        function Button:AddButton(...)
-            local SubButton = {}
-
-            ProcessButtonParams('SubButton', SubButton, ...)
-
-            self.Outer.Size = UDim2.new(0.5, -2, 0, 20)
-
-            SubButton.Outer, SubButton.Inner, SubButton.Label = CreateBaseButton(SubButton)
-
-            SubButton.Outer.Position = UDim2.new(1, 3, 0, 0)
-            SubButton.Outer.Size = UDim2.fromOffset(self.Outer.AbsoluteSize.X - 2, self.Outer.AbsoluteSize.Y)
-            SubButton.Outer.Parent = self.Outer
-
-            function SubButton:AddTooltip(tooltip)
-                if type(tooltip) == 'string' then
-                    Library:AddToolTip(tooltip, self.Outer)
-                end
-                return SubButton
-            end
-
-            if type(SubButton.Tooltip) == 'string' then
-                SubButton:AddTooltip(SubButton.Tooltip)
-            end
-
-            InitEvents(SubButton)
-            return SubButton
-        end
-
-        if type(Button.Tooltip) == 'string' then
-            Button:AddTooltip(Button.Tooltip)
-        end
-
-        Groupbox:AddBlank(5);
-        Groupbox:Resize();
-
-        return Button;
-    end;
-
-    function Funcs:AddDivider()
-        local Groupbox = self;
-        local Container = self.Container
-
-        local Divider = {
-            Type = 'Divider',
-        }
-
-        Groupbox:AddBlank(2);
-        local DividerOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, -4, 0, 5);
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        local DividerInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
-            Parent = DividerOuter;
-        });
-
-        Library:AddToRegistry(DividerOuter, {
-            BorderColor3 = 'Black';
-        });
-
-        Library:AddToRegistry(DividerInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        Groupbox:AddBlank(9);
-        Groupbox:Resize();
-    end
-
-    function Funcs:AddInput(Idx, Info)
-        assert(Info.Text, 'AddInput: Missing `Text` string.')
-
-        local Textbox = {
-            Value = Info.Default or '';
-            Numeric = Info.Numeric or false;
-            Finished = Info.Finished or false;
-            Type = 'Input';
-            Callback = Info.Callback or function(Value) end;
-        };
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local InputLabel = Library:CreateLabel({
-            Size = UDim2.new(1, 0, 0, 15);
-            TextSize = 14;
-            Text = Info.Text;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        Groupbox:AddBlank(1);
-
-        local TextBoxOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, -4, 0, 20);
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        local TextBoxInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
-            Parent = TextBoxOuter;
-        });
-
-        Library:AddToRegistry(TextBoxInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        Library:OnHighlight(TextBoxOuter, TextBoxOuter,
-            { BorderColor3 = 'AccentColor' },
-            { BorderColor3 = 'Black' }
-        );
-
-        if type(Info.Tooltip) == 'string' then
-            Library:AddToolTip(Info.Tooltip, TextBoxOuter)
-        end
-
-        Library:Create('UIGradient', {
-            Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-            });
-            Rotation = 90;
-            Parent = TextBoxInner;
-        });
-
-        local Container = Library:Create('Frame', {
-            BackgroundTransparency = 1;
-            ClipsDescendants = true;
-
-            Position = UDim2.new(0, 5, 0, 0);
-            Size = UDim2.new(1, -5, 1, 0);
-
-            ZIndex = 7;
-            Parent = TextBoxInner;
-        })
-
-        local Box = Library:Create('TextBox', {
-            BackgroundTransparency = 1;
-
-            Position = UDim2.fromOffset(0, 0),
-            Size = UDim2.fromScale(5, 1),
-
-            Font = Library.Font;
-            PlaceholderColor3 = Color3.fromRGB(190, 190, 190);
-            PlaceholderText = Info.Placeholder or '';
-
-            Text = Info.Default or '';
-            TextColor3 = Library.FontColor;
-            TextSize = 14;
-            TextStrokeTransparency = 0;
-            TextXAlignment = Enum.TextXAlignment.Left;
-
-            ZIndex = 7;
-            Parent = Container;
-        });
-
-        Library:ApplyTextStroke(Box);
-
-        function Textbox:SetValue(Text)
-            if Info.MaxLength and #Text > Info.MaxLength then
-                Text = Text:sub(1, Info.MaxLength);
-            end;
-
-            if Textbox.Numeric then
-                if (not tonumber(Text)) and Text:len() > 0 then
-                    Text = Textbox.Value
-                end
-            end
-
-            Textbox.Value = Text;
-            Box.Text = Text;
-
-            Library:SafeCallback(Textbox.Callback, Textbox.Value);
-            Library:SafeCallback(Textbox.Changed, Textbox.Value);
-        end;
-
-        if Textbox.Finished then
-            Box.FocusLost:Connect(function(enter)
-                if not enter then return end
-
-                Textbox:SetValue(Box.Text);
-                Library:AttemptSave();
-            end)
-        else
-            Box:GetPropertyChangedSignal('Text'):Connect(function()
-                Textbox:SetValue(Box.Text);
-                Library:AttemptSave();
-            end);
-        end
-
-        -- https://devforum.roblox.com/t/how-to-make-textboxes-follow-current-cursor-position/1368429/6
-        -- thank you nicemike40 :)
-
-        local function Update()
-            local PADDING = 2
-            local reveal = Container.AbsoluteSize.X
-
-            if not Box:IsFocused() or Box.TextBounds.X <= reveal - 2 * PADDING then
-                -- we aren't focused, or we fit so be normal
-                Box.Position = UDim2.new(0, PADDING, 0, 0)
-            else
-                -- we are focused and don't fit, so adjust position
-                local cursor = Box.CursorPosition
-                if cursor ~= -1 then
-                    -- calculate pixel width of text from start to cursor
-                    local subtext = string.sub(Box.Text, 1, cursor-1)
-                    local width = TextService:GetTextSize(subtext, Box.TextSize, Box.Font, Vector2.new(math.huge, math.huge)).X
-
-                    -- check if we're inside the box with the cursor
-                    local currentCursorPos = Box.Position.X.Offset + width
-
-                    -- adjust if necessary
-                    if currentCursorPos < PADDING then
-                        Box.Position = UDim2.fromOffset(PADDING-width, 0)
-                    elseif currentCursorPos > reveal - PADDING - 1 then
-                        Box.Position = UDim2.fromOffset(reveal-width-PADDING-1, 0)
-                    end
-                end
-            end
-        end
-
-        task.spawn(Update)
-
-        Box:GetPropertyChangedSignal('Text'):Connect(Update)
-        Box:GetPropertyChangedSignal('CursorPosition'):Connect(Update)
-        Box.FocusLost:Connect(Update)
-        Box.Focused:Connect(Update)
-
-        Library:AddToRegistry(Box, {
-            TextColor3 = 'FontColor';
-        });
-
-        function Textbox:OnChanged(Func)
-            Textbox.Changed = Func;
-            Func(Textbox.Value);
-        end;
-
-        Groupbox:AddBlank(5);
-        Groupbox:Resize();
-
-        Options[Idx] = Textbox;
-
-        return Textbox;
-    end;
-
-    function Funcs:AddToggle(Idx, Info)
-        assert(Info.Text, 'AddInput: Missing `Text` string.')
-
-        local Toggle = {
-            Value = Info.Default or false;
-            Type = 'Toggle';
-
-            Callback = Info.Callback or function(Value) end;
-            Addons = {},
-            Risky = Info.Risky,
-        };
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local ToggleOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(0, 13, 0, 13);
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        Library:AddToRegistry(ToggleOuter, {
-            BorderColor3 = 'Black';
-        });
-
-        local ToggleInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
-            Parent = ToggleOuter;
-        });
-
-        Library:AddToRegistry(ToggleInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        local ToggleLabel = Library:CreateLabel({
-            Size = UDim2.new(0, 216, 1, 0);
-            Position = UDim2.new(1, 6, 0, 0);
-            TextSize = 14;
-            Text = Info.Text;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            ZIndex = 6;
-            Parent = ToggleInner;
-        });
-
-        Library:Create('UIListLayout', {
-            Padding = UDim.new(0, 4);
-            FillDirection = Enum.FillDirection.Horizontal;
-            HorizontalAlignment = Enum.HorizontalAlignment.Right;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            Parent = ToggleLabel;
-        });
-
-        local ToggleRegion = Library:Create('Frame', {
-            BackgroundTransparency = 1;
-            Size = UDim2.new(0, 170, 1, 0);
-            ZIndex = 8;
-            Parent = ToggleOuter;
-        });
-
-        Library:OnHighlight(ToggleRegion, ToggleOuter,
-            { BorderColor3 = 'AccentColor' },
-            { BorderColor3 = 'Black' }
-        );
-
-        function Toggle:UpdateColors()
-            Toggle:Display();
-        end;
-
-        if type(Info.Tooltip) == 'string' then
-            Library:AddToolTip(Info.Tooltip, ToggleRegion)
-        end
-
-        function Toggle:Display()
-            ToggleInner.BackgroundColor3 = Toggle.Value and Library.AccentColor or Library.MainColor;
-            ToggleInner.BorderColor3 = Toggle.Value and Library.AccentColorDark or Library.OutlineColor;
-
-            Library.RegistryMap[ToggleInner].Properties.BackgroundColor3 = Toggle.Value and 'AccentColor' or 'MainColor';
-            Library.RegistryMap[ToggleInner].Properties.BorderColor3 = Toggle.Value and 'AccentColorDark' or 'OutlineColor';
-        end;
-
-        function Toggle:OnChanged(Func)
-            Toggle.Changed = Func;
-            Func(Toggle.Value);
-        end;
-
-        function Toggle:SetValue(Bool)
-            Bool = (not not Bool);
-
-            Toggle.Value = Bool;
-            Toggle:Display();
-
-            for _, Addon in next, Toggle.Addons do
-                if Addon.Type == 'KeyPicker' and Addon.SyncToggleState then
-                    Addon.Toggled = Bool
-                    Addon:Update()
-                end
-            end
-
-            Library:SafeCallback(Toggle.Callback, Toggle.Value);
-            Library:SafeCallback(Toggle.Changed, Toggle.Value);
-            Library:UpdateDependencyBoxes();
-        end;
-
-        ToggleRegion.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                Toggle:SetValue(not Toggle.Value) -- Why was it not like this from the start?
-                Library:AttemptSave();
-            end;
-        end);
-
-        if Toggle.Risky then
-            Library:RemoveFromRegistry(ToggleLabel)
-            ToggleLabel.TextColor3 = Library.RiskColor
-            Library:AddToRegistry(ToggleLabel, { TextColor3 = 'RiskColor' })
-        end
-
-        Toggle:Display();
-        Groupbox:AddBlank(Info.BlankSize or 5 + 2);
-        Groupbox:Resize();
-
-        Toggle.TextLabel = ToggleLabel;
-        Toggle.Container = Container;
-        setmetatable(Toggle, BaseAddons);
-
-        Toggles[Idx] = Toggle;
-
-        Library:UpdateDependencyBoxes();
-
-        return Toggle;
-    end;
-
-    function Funcs:AddSlider(Idx, Info)
-        assert(Info.Default, 'AddSlider: Missing default value.');
-        assert(Info.Text, 'AddSlider: Missing slider text.');
-        assert(Info.Min, 'AddSlider: Missing minimum value.');
-        assert(Info.Max, 'AddSlider: Missing maximum value.');
-        assert(Info.Rounding, 'AddSlider: Missing rounding value.');
-
-        local Slider = {
-            Value = Info.Default;
-            Min = Info.Min;
-            Max = Info.Max;
-            Rounding = Info.Rounding;
-            MaxSize = 232;
-            Type = 'Slider';
-            Callback = Info.Callback or function(Value) end;
-        };
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        if not Info.Compact then
-            Library:CreateLabel({
-                Size = UDim2.new(1, 0, 0, 10);
-                TextSize = 14;
-                Text = Info.Text;
-                TextXAlignment = Enum.TextXAlignment.Left;
-                TextYAlignment = Enum.TextYAlignment.Bottom;
-                ZIndex = 5;
-                Parent = Container;
-            });
-
-            Groupbox:AddBlank(3);
-        end
-
-        local SliderOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, -4, 0, 13);
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        Library:AddToRegistry(SliderOuter, {
-            BorderColor3 = 'Black';
-        });
-
-        local SliderInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
-            Parent = SliderOuter;
-        });
-
-        Library:AddToRegistry(SliderInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        local Fill = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
-            BorderColor3 = Library.AccentColorDark;
-            Size = UDim2.new(0, 0, 1, 0);
-            ZIndex = 7;
-            Parent = SliderInner;
-        });
-
-        Library:AddToRegistry(Fill, {
-            BackgroundColor3 = 'AccentColor';
-            BorderColor3 = 'AccentColorDark';
-        });
-
-        local HideBorderRight = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
-            BorderSizePixel = 0;
-            Position = UDim2.new(1, 0, 0, 0);
-            Size = UDim2.new(0, 1, 1, 0);
-            ZIndex = 8;
-            Parent = Fill;
-        });
-
-        Library:AddToRegistry(HideBorderRight, {
-            BackgroundColor3 = 'AccentColor';
-        });
-
-        local DisplayLabel = Library:CreateLabel({
-            Size = UDim2.new(1, 0, 1, 0);
-            TextSize = 14;
-            Text = 'Infinite';
-            ZIndex = 9;
-            Parent = SliderInner;
-        });
-
-        Library:OnHighlight(SliderOuter, SliderOuter,
-            { BorderColor3 = 'AccentColor' },
-            { BorderColor3 = 'Black' }
-        );
-
-        if type(Info.Tooltip) == 'string' then
-            Library:AddToolTip(Info.Tooltip, SliderOuter)
-        end
-
-        function Slider:UpdateColors()
-            Fill.BackgroundColor3 = Library.AccentColor;
-            Fill.BorderColor3 = Library.AccentColorDark;
-        end;
-
-        function Slider:Display()
-            local Suffix = Info.Suffix or '';
-
-            if Info.Compact then
-                DisplayLabel.Text = Info.Text .. ': ' .. Slider.Value .. Suffix
-            elseif Info.HideMax then
-                DisplayLabel.Text = string.format('%s', Slider.Value .. Suffix)
-            else
-                DisplayLabel.Text = string.format('%s/%s', Slider.Value .. Suffix, Slider.Max .. Suffix);
-            end
-
-            local X = math.ceil(Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, Slider.MaxSize));
-            Fill.Size = UDim2.new(0, X, 1, 0);
-
-            HideBorderRight.Visible = not (X == Slider.MaxSize or X == 0);
-        end;
-
-        function Slider:OnChanged(Func)
-            Slider.Changed = Func;
-            Func(Slider.Value);
-        end;
-
-        local function Round(Value)
-            if Slider.Rounding == 0 then
-                return math.floor(Value);
-            end;
-
-
-            return tonumber(string.format('%.' .. Slider.Rounding .. 'f', Value))
-        end;
-
-        function Slider:GetValueFromXOffset(X)
-            return Round(Library:MapValue(X, 0, Slider.MaxSize, Slider.Min, Slider.Max));
-        end;
-
-        function Slider:SetValue(Str)
-            local Num = tonumber(Str);
-
-            if (not Num) then
-                return;
-            end;
-
-            Num = math.clamp(Num, Slider.Min, Slider.Max);
-
-            Slider.Value = Num;
-            Slider:Display();
-
-            Library:SafeCallback(Slider.Callback, Slider.Value);
-            Library:SafeCallback(Slider.Changed, Slider.Value);
-        end;
-
-        SliderInner.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                local mPos = Mouse.X;
-                local gPos = Fill.Size.X.Offset;
-                local Diff = mPos - (Fill.AbsolutePosition.X + gPos);
-
-                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local nMPos = Mouse.X;
-                    local nX = math.clamp(gPos + (nMPos - mPos) + Diff, 0, Slider.MaxSize);
-
-                    local nValue = Slider:GetValueFromXOffset(nX);
-                    local OldValue = Slider.Value;
-                    Slider.Value = nValue;
-
-                    Slider:Display();
-
-                    if nValue ~= OldValue then
-                        Library:SafeCallback(Slider.Callback, Slider.Value);
-                        Library:SafeCallback(Slider.Changed, Slider.Value);
-                    end;
-
-                    RenderStepped:Wait();
-                end;
-
-                Library:AttemptSave();
-            end;
-        end);
-
-        Slider:Display();
-        Groupbox:AddBlank(Info.BlankSize or 6);
-        Groupbox:Resize();
-
-        Options[Idx] = Slider;
-
-        return Slider;
-    end;
-
-    function Funcs:AddDropdown(Idx, Info)
-        if Info.SpecialType == 'Player' then
-            Info.Values = GetPlayersString();
-            Info.AllowNull = true;
-        elseif Info.SpecialType == 'Team' then
-            Info.Values = GetTeamsString();
-            Info.AllowNull = true;
-        end;
-
-        assert(Info.Values, 'AddDropdown: Missing dropdown value list.');
-        assert(Info.AllowNull or Info.Default, 'AddDropdown: Missing default value. Pass `AllowNull` as true if this was intentional.')
-
-        if (not Info.Text) then
-            Info.Compact = true;
-        end;
-
-        local Dropdown = {
-            Values = Info.Values;
-            Value = Info.Multi and {};
-            Multi = Info.Multi;
-            Type = 'Dropdown';
-            SpecialType = Info.SpecialType; -- can be either 'Player' or 'Team'
-            Callback = Info.Callback or function(Value) end;
-        };
-
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local RelativeOffset = 0;
-
-        if not Info.Compact then
-            local DropdownLabel = Library:CreateLabel({
-                Size = UDim2.new(1, 0, 0, 10);
-                TextSize = 14;
-                Text = Info.Text;
-                TextXAlignment = Enum.TextXAlignment.Left;
-                TextYAlignment = Enum.TextYAlignment.Bottom;
-                ZIndex = 5;
-                Parent = Container;
-            });
-
-            Groupbox:AddBlank(3);
-        end
-
-        for _, Element in next, Container:GetChildren() do
-            if not Element:IsA('UIListLayout') then
-                RelativeOffset = RelativeOffset + Element.Size.Y.Offset;
-            end;
-        end;
-
-        local DropdownOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, -4, 0, 20);
-            ZIndex = 5;
-            Parent = Container;
-        });
-
-        Library:AddToRegistry(DropdownOuter, {
-            BorderColor3 = 'Black';
-        });
-
-        local DropdownInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
-            Parent = DropdownOuter;
-        });
-
-        Library:AddToRegistry(DropdownInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        Library:Create('UIGradient', {
-            Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-            });
-            Rotation = 90;
-            Parent = DropdownInner;
-        });
-
-        local DropdownArrow = Library:Create('ImageLabel', {
-            AnchorPoint = Vector2.new(0, 0.5);
-            BackgroundTransparency = 1;
-            Position = UDim2.new(1, -16, 0.5, 0);
-            Size = UDim2.new(0, 12, 0, 12);
-            Image = 'http://www.roblox.com/asset/?id=6282522798';
-            ZIndex = 8;
-            Parent = DropdownInner;
-        });
-
-        local ItemList = Library:CreateLabel({
-            Position = UDim2.new(0, 5, 0, 0);
-            Size = UDim2.new(1, -5, 1, 0);
-            TextSize = 14;
-            Text = '--';
-            TextXAlignment = Enum.TextXAlignment.Left;
-            TextWrapped = true;
-            ZIndex = 7;
-            Parent = DropdownInner;
-        });
-
-        Library:OnHighlight(DropdownOuter, DropdownOuter,
-            { BorderColor3 = 'AccentColor' },
-            { BorderColor3 = 'Black' }
-        );
-
-        if type(Info.Tooltip) == 'string' then
-            Library:AddToolTip(Info.Tooltip, DropdownOuter)
-        end
-
-        local MAX_DROPDOWN_ITEMS = 8;
-
-        local ListOuter = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(0, 0, 0);
-            BorderColor3 = Color3.new(0, 0, 0);
-            ZIndex = 20;
-            Visible = false;
-            Parent = ScreenGui;
-        });
-
-        local function RecalculateListPosition()
-            ListOuter.Position = UDim2.fromOffset(DropdownOuter.AbsolutePosition.X, DropdownOuter.AbsolutePosition.Y + DropdownOuter.Size.Y.Offset + 1);
-        end;
-
-        local function RecalculateListSize(YSize)
-            ListOuter.Size = UDim2.fromOffset(DropdownOuter.AbsoluteSize.X, YSize or (MAX_DROPDOWN_ITEMS * 20 + 2))
-        end;
-
-        RecalculateListPosition();
-        RecalculateListSize();
-
-        DropdownOuter:GetPropertyChangedSignal('AbsolutePosition'):Connect(RecalculateListPosition);
-
-        local ListInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 21;
-            Parent = ListOuter;
-        });
-
-        Library:AddToRegistry(ListInner, {
-            BackgroundColor3 = 'MainColor';
-            BorderColor3 = 'OutlineColor';
-        });
-
-        local Scrolling = Library:Create('ScrollingFrame', {
-            BackgroundTransparency = 1;
-            BorderSizePixel = 0;
-            CanvasSize = UDim2.new(0, 0, 0, 0);
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 21;
-            Parent = ListInner;
-
-            TopImage = 'rbxasset://textures/ui/Scroll/scroll-middle.png',
-            BottomImage = 'rbxasset://textures/ui/Scroll/scroll-middle.png',
-
-            ScrollBarThickness = 3,
-            ScrollBarImageColor3 = Library.AccentColor,
-        });
-
-        Library:AddToRegistry(Scrolling, {
-            ScrollBarImageColor3 = 'AccentColor'
-        })
-
-        Library:Create('UIListLayout', {
-            Padding = UDim.new(0, 0);
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            Parent = Scrolling;
-        });
-
-        function Dropdown:Display()
-            local Values = Dropdown.Values;
-            local Str = '';
-
-            if Info.Multi then
-                for Idx, Value in next, Values do
-                    if Dropdown.Value[Value] then
-                        Str = Str .. Value .. ', ';
-                    end;
-                end;
-
-                Str = Str:sub(1, #Str - 2);
-            else
-                Str = Dropdown.Value or '';
-            end;
-
-            ItemList.Text = (Str == '' and '--' or Str);
-        end;
-
-        function Dropdown:GetActiveValues()
-            if Info.Multi then
-                local T = {};
-
-                for Value, Bool in next, Dropdown.Value do
-                    table.insert(T, Value);
-                end;
-
-                return T;
-            else
-                return Dropdown.Value and 1 or 0;
-            end;
-        end;
-
-        function Dropdown:BuildDropdownList()
-            local Values = Dropdown.Values;
-            local Buttons = {};
-
-            for _, Element in next, Scrolling:GetChildren() do
-                if not Element:IsA('UIListLayout') then
-                    Element:Destroy();
-                end;
-            end;
-
-            local Count = 0;
-
-            for Idx, Value in next, Values do
-                local Table = {};
-
-                Count = Count + 1;
-
-                local Button = Library:Create('Frame', {
-                    BackgroundColor3 = Library.MainColor;
-                    BorderColor3 = Library.OutlineColor;
-                    BorderMode = Enum.BorderMode.Middle;
-                    Size = UDim2.new(1, -1, 0, 20);
-                    ZIndex = 23;
-                    Active = true,
-                    Parent = Scrolling;
-                });
-
-                Library:AddToRegistry(Button, {
-                    BackgroundColor3 = 'MainColor';
-                    BorderColor3 = 'OutlineColor';
-                });
-
-                local ButtonLabel = Library:CreateLabel({
-                    Active = false;
-                    Size = UDim2.new(1, -6, 1, 0);
-                    Position = UDim2.new(0, 6, 0, 0);
-                    TextSize = 14;
-                    Text = Value;
-                    TextXAlignment = Enum.TextXAlignment.Left;
-                    ZIndex = 25;
-                    Parent = Button;
-                });
-
-                Library:OnHighlight(Button, Button,
-                    { BorderColor3 = 'AccentColor', ZIndex = 24 },
-                    { BorderColor3 = 'OutlineColor', ZIndex = 23 }
-                );
-
-                local Selected;
-
-                if Info.Multi then
-                    Selected = Dropdown.Value[Value];
-                else
-                    Selected = Dropdown.Value == Value;
-                end;
-
-                function Table:UpdateButton()
-                    if Info.Multi then
-                        Selected = Dropdown.Value[Value];
-                    else
-                        Selected = Dropdown.Value == Value;
-                    end;
-
-                    ButtonLabel.TextColor3 = Selected and Library.AccentColor or Library.FontColor;
-                    Library.RegistryMap[ButtonLabel].Properties.TextColor3 = Selected and 'AccentColor' or 'FontColor';
-                end;
-
-                ButtonLabel.InputBegan:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        local Try = not Selected;
-
-                        if Dropdown:GetActiveValues() == 1 and (not Try) and (not Info.AllowNull) then
-                        else
-                            if Info.Multi then
-                                Selected = Try;
-
-                                if Selected then
-                                    Dropdown.Value[Value] = true;
-                                else
-                                    Dropdown.Value[Value] = nil;
-                                end;
-                            else
-                                Selected = Try;
-
-                                if Selected then
-                                    Dropdown.Value = Value;
-                                else
-                                    Dropdown.Value = nil;
-                                end;
-
-                                for _, OtherButton in next, Buttons do
-                                    OtherButton:UpdateButton();
-                                end;
-                            end;
-
-                            Table:UpdateButton();
-                            Dropdown:Display();
-
-                            Library:SafeCallback(Dropdown.Callback, Dropdown.Value);
-                            Library:SafeCallback(Dropdown.Changed, Dropdown.Value);
-
-                            Library:AttemptSave();
-                        end;
-                    end;
-                end);
-
-                Table:UpdateButton();
-                Dropdown:Display();
-
-                Buttons[Button] = Table;
-            end;
-
-            Scrolling.CanvasSize = UDim2.fromOffset(0, (Count * 20) + 1);
-
-            local Y = math.clamp(Count * 20, 0, MAX_DROPDOWN_ITEMS * 20) + 1;
-            RecalculateListSize(Y);
-        end;
-
-        function Dropdown:SetValues(NewValues)
-            if NewValues then
-                Dropdown.Values = NewValues;
-            end;
-
-            Dropdown:BuildDropdownList();
-        end;
-
-        function Dropdown:OpenDropdown()
-            ListOuter.Visible = true;
-            Library.OpenedFrames[ListOuter] = true;
-            DropdownArrow.Rotation = 180;
-        end;
-
-        function Dropdown:CloseDropdown()
-            ListOuter.Visible = false;
-            Library.OpenedFrames[ListOuter] = nil;
-            DropdownArrow.Rotation = 0;
-        end;
-
-        function Dropdown:OnChanged(Func)
-            Dropdown.Changed = Func;
-            Func(Dropdown.Value);
-        end;
-
-        function Dropdown:SetValue(Val)
-            if Dropdown.Multi then
-                local nTable = {};
-
-                for Value, Bool in next, Val do
-                    if table.find(Dropdown.Values, Value) then
-                        nTable[Value] = true
-                    end;
-                end;
-
-                Dropdown.Value = nTable;
-            else
-                if (not Val) then
-                    Dropdown.Value = nil;
-                elseif table.find(Dropdown.Values, Val) then
-                    Dropdown.Value = Val;
-                end;
-            end;
-
-            Dropdown:BuildDropdownList();
-
-            Library:SafeCallback(Dropdown.Callback, Dropdown.Value);
-            Library:SafeCallback(Dropdown.Changed, Dropdown.Value);
-        end;
-
-        DropdownOuter.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                if ListOuter.Visible then
-                    Dropdown:CloseDropdown();
-                else
-                    Dropdown:OpenDropdown();
-                end;
-            end;
-        end);
-
-        InputService.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = ListOuter.AbsolutePosition, ListOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    Dropdown:CloseDropdown();
-                end;
-            end;
-        end);
-
-        Dropdown:BuildDropdownList();
-        Dropdown:Display();
-
-        local Defaults = {}
-
-        if type(Info.Default) == 'string' then
-            local Idx = table.find(Dropdown.Values, Info.Default)
-            if Idx then
-                table.insert(Defaults, Idx)
-            end
-        elseif type(Info.Default) == 'table' then
-            for _, Value in next, Info.Default do
-                local Idx = table.find(Dropdown.Values, Value)
-                if Idx then
-                    table.insert(Defaults, Idx)
-                end
-            end
-        elseif type(Info.Default) == 'number' and Dropdown.Values[Info.Default] ~= nil then
-            table.insert(Defaults, Info.Default)
-        end
-
-        if next(Defaults) then
-            for i = 1, #Defaults do
-                local Index = Defaults[i]
-                if Info.Multi then
-                    Dropdown.Value[Dropdown.Values[Index]] = true
-                else
-                    Dropdown.Value = Dropdown.Values[Index];
-                end
-
-                if (not Info.Multi) then break end
-            end
-
-            Dropdown:BuildDropdownList();
-            Dropdown:Display();
-        end
-
-        Groupbox:AddBlank(Info.BlankSize or 5);
-        Groupbox:Resize();
-
-        Options[Idx] = Dropdown;
-
-        return Dropdown;
-    end;
-
-    function Funcs:AddDependencyBox()
-        local Depbox = {
-            Dependencies = {};
-        };
-        
-        local Groupbox = self;
-        local Container = Groupbox.Container;
-
-        local Holder = Library:Create('Frame', {
-            BackgroundTransparency = 1;
-            Size = UDim2.new(1, 0, 0, 0);
-            Visible = false;
-            Parent = Container;
-        });
-
-        local Frame = Library:Create('Frame', {
-            BackgroundTransparency = 1;
-            Size = UDim2.new(1, 0, 1, 0);
-            Visible = true;
-            Parent = Holder;
-        });
-
-        local Layout = Library:Create('UIListLayout', {
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            Parent = Frame;
-        });
-
-        function Depbox:Resize()
-            Holder.Size = UDim2.new(1, 0, 0, Layout.AbsoluteContentSize.Y);
-            Groupbox:Resize();
-        end;
-
-        Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
-            Depbox:Resize();
-        end);
-
-        Holder:GetPropertyChangedSignal('Visible'):Connect(function()
-            Depbox:Resize();
-        end);
-
-        function Depbox:Update()
-            for _, Dependency in next, Depbox.Dependencies do
-                local Elem = Dependency[1];
-                local Value = Dependency[2];
-
-                if Elem.Type == 'Toggle' and Elem.Value ~= Value then
-                    Holder.Visible = false;
-                    Depbox:Resize();
-                    return;
-                end;
-            end;
-
-            Holder.Visible = true;
-            Depbox:Resize();
-        end;
-
-        function Depbox:SetupDependencies(Dependencies)
-            for _, Dependency in next, Dependencies do
-                assert(type(Dependency) == 'table', 'SetupDependencies: Dependency is not of type `table`.');
-                assert(Dependency[1], 'SetupDependencies: Dependency is missing element argument.');
-                assert(Dependency[2] ~= nil, 'SetupDependencies: Dependency is missing value argument.');
-            end;
-
-            Depbox.Dependencies = Dependencies;
-            Depbox:Update();
-        end;
-
-        Depbox.Container = Frame;
-
-        setmetatable(Depbox, BaseGroupbox);
-
-        table.insert(Library.DependencyBoxes, Depbox);
-
-        return Depbox;
-    end;
-
-    BaseGroupbox.__index = Funcs;
-    BaseGroupbox.__namecall = function(Table, Key, ...)
-        return Funcs[Key](...);
-    end;
-end;
-
--- < Create other UI elements >
-do
-    Library.NotificationArea = Library:Create('Frame', {
-        BackgroundTransparency = 1;
-        Position = UDim2.new(0, 0, 0, 40);
-        Size = UDim2.new(0, 300, 0, 200);
-        ZIndex = 100;
-        Parent = ScreenGui;
-    });
-
-    Library:Create('UIListLayout', {
-        Padding = UDim.new(0, 4);
-        FillDirection = Enum.FillDirection.Vertical;
-        SortOrder = Enum.SortOrder.LayoutOrder;
-        Parent = Library.NotificationArea;
-    });
-
-    local WatermarkOuter = Library:Create('Frame', {
-        BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 100, 0, -25);
-        Size = UDim2.new(0, 213, 0, 20);
-        ZIndex = 200;
-        Visible = false;
-        Parent = ScreenGui;
-    });
-
-    local WatermarkInner = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.AccentColor;
-        BorderMode = Enum.BorderMode.Inset;
-        Size = UDim2.new(1, 0, 1, 0);
-        ZIndex = 201;
-        Parent = WatermarkOuter;
-    });
-
-    Library:AddToRegistry(WatermarkInner, {
-        BorderColor3 = 'AccentColor';
-    });
-
-    local InnerFrame = Library:Create('Frame', {
-        BackgroundColor3 = Color3.new(1, 1, 1);
-        BorderSizePixel = 0;
-        Position = UDim2.new(0, 1, 0, 1);
-        Size = UDim2.new(1, -2, 1, -2);
-        ZIndex = 202;
-        Parent = WatermarkInner;
-    });
-
-    local Gradient = Library:Create('UIGradient', {
-        Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-            ColorSequenceKeypoint.new(1, Library.MainColor),
-        });
-        Rotation = -90;
-        Parent = InnerFrame;
-    });
-
-    Library:AddToRegistry(Gradient, {
-        Color = function()
-            return ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-                ColorSequenceKeypoint.new(1, Library.MainColor),
-            });
-        end
-    });
-
-    local WatermarkLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 5, 0, 0);
-        Size = UDim2.new(1, -4, 1, 0);
-        TextSize = 14;
-        TextXAlignment = Enum.TextXAlignment.Left;
-        ZIndex = 203;
-        Parent = InnerFrame;
-    });
-
-    Library.Watermark = WatermarkOuter;
-    Library.WatermarkText = WatermarkLabel;
-    Library:MakeDraggable(Library.Watermark);
-
-
-
-    local KeybindOuter = Library:Create('Frame', {
-        AnchorPoint = Vector2.new(0, 0.5);
-        BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 10, 0.5, 0);
-        Size = UDim2.new(0, 210, 0, 20);
-        Visible = false;
-        ZIndex = 100;
-        Parent = ScreenGui;
-    });
-
-    local KeybindInner = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.OutlineColor;
-        BorderMode = Enum.BorderMode.Inset;
-        Size = UDim2.new(1, 0, 1, 0);
-        ZIndex = 101;
-        Parent = KeybindOuter;
-    });
-
-    Library:AddToRegistry(KeybindInner, {
-        BackgroundColor3 = 'MainColor';
-        BorderColor3 = 'OutlineColor';
-    }, true);
-
-    local ColorFrame = Library:Create('Frame', {
-        BackgroundColor3 = Library.AccentColor;
-        BorderSizePixel = 0;
-        Size = UDim2.new(1, 0, 0, 2);
-        ZIndex = 102;
-        Parent = KeybindInner;
-    });
-
-    Library:AddToRegistry(ColorFrame, {
-        BackgroundColor3 = 'AccentColor';
-    }, true);
-
-    local KeybindLabel = Library:CreateLabel({
-        Size = UDim2.new(1, 0, 0, 20);
-        Position = UDim2.fromOffset(5, 2),
-        TextXAlignment = Enum.TextXAlignment.Left,
-
-        Text = 'Keybinds';
-        ZIndex = 104;
-        Parent = KeybindInner;
-    });
-
-    local KeybindContainer = Library:Create('Frame', {
-        BackgroundTransparency = 1;
-        Size = UDim2.new(1, 0, 1, -20);
-        Position = UDim2.new(0, 0, 0, 20);
-        ZIndex = 1;
-        Parent = KeybindInner;
-    });
-
-    Library:Create('UIListLayout', {
-        FillDirection = Enum.FillDirection.Vertical;
-        SortOrder = Enum.SortOrder.LayoutOrder;
-        Parent = KeybindContainer;
-    });
-
-    Library:Create('UIPadding', {
-        PaddingLeft = UDim.new(0, 5),
-        Parent = KeybindContainer,
-    })
-
-    Library.KeybindFrame = KeybindOuter;
-    Library.KeybindContainer = KeybindContainer;
-    Library:MakeDraggable(KeybindOuter);
-end;
-
-function Library:SetWatermarkVisibility(Bool)
-    Library.Watermark.Visible = Bool;
-end;
-
-function Library:SetWatermark(Text)
-    local X, Y = Library:GetTextBounds(Text, Library.Font, 14);
-    Library.Watermark.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3);
-    Library:SetWatermarkVisibility(true)
-
-    Library.WatermarkText.Text = Text;
-end;
-
-
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
--- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-function Library:Notify(Text, Time)
-    local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
-
-    YSize = YSize + 7
-
-    local NotifyOuter = Library:Create('Frame', {
-        BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 100, 0, 10);
-        Size = UDim2.new(0, 0, 0, YSize);
-        ClipsDescendants = true;
-        ZIndex = 100;
-        Parent = Library.NotificationArea;
-    });
-
-    local NotifyInner = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.OutlineColor;
-        BorderMode = Enum.BorderMode.Inset;
-        Size = UDim2.new(1, 0, 1, 0);
-        ZIndex = 101;
-        Parent = NotifyOuter;
-    });
-
-    Library:AddToRegistry(NotifyInner, {
-        BackgroundColor3 = 'MainColor';
-        BorderColor3 = 'OutlineColor';
-    }, true);
-
-    local InnerFrame = Library:Create('Frame', {
-        BackgroundColor3 = Color3.new(1, 1, 1);
-        BorderSizePixel = 0;
-        Position = UDim2.new(0, 1, 0, 1);
-        Size = UDim2.new(1, -2, 1, -2);
-        ZIndex = 102;
-        Parent = NotifyInner;
-    });
-
-    local Gradient = Library:Create('UIGradient', {
-        Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-            ColorSequenceKeypoint.new(1, Library.MainColor),
-        });
-        Rotation = -90;
-        Parent = InnerFrame;
-    });
-
-    Library:AddToRegistry(Gradient, {
-        Color = function()
-            return ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-                ColorSequenceKeypoint.new(1, Library.MainColor),
-            });
-        end
-    });
-
-    local NotifyLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 4, 0, 0);
-        Size = UDim2.new(1, -4, 1, 0);
-        Text = Text;
-        TextXAlignment = Enum.TextXAlignment.Left;
-        TextSize = 14;
-        ZIndex = 103;
-        Parent = InnerFrame;
-    });
-
-    local LeftColor = Library:Create('Frame', {
-        BackgroundColor3 = Library.AccentColor;
-        BorderSizePixel = 0;
-        Position = UDim2.new(0, -1, 0, -1);
-        Size = UDim2.new(0, 3, 1, 2);
-        ZIndex = 104;
-        Parent = NotifyOuter;
-    });
-
-    Library:AddToRegistry(LeftColor, {
-        BackgroundColor3 = 'AccentColor';
-    }, true);
-
-    pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, XSize + 8 + 4, 0, YSize), 'Out', 'Quad', 0.4, true);
-
-    task.spawn(function()
-        wait(Time or 5);
-
-        pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, 0, 0, YSize), 'Out', 'Quad', 0.4, true);
-
-        wait(0.4);
-
-        NotifyOuter:Destroy();
-    end);
-end;
-
-function Library:CreateWindow(...)
-    local Arguments = { ... }
-    local Config = { AnchorPoint = Vector2.zero }
-
-    if type(...) == 'table' then
-        Config = ...;
-    else
-        Config.Title = Arguments[1]
-        Config.Version = Arguments[2]
-        Config.AutoShow = Arguments[3] or false;
-    end
-
-    if type(Config.Title) ~= 'string' then Config.Title = 'No title' end
-    if type(Config.Version) ~= 'string' then Config.Version = '' end
-    if type(Config.MenuFadeTime) ~= 'number' then Config.MenuFadeTime = 0.2 end
-
-    if typeof(Config.Position) ~= 'UDim2' then Config.Position = UDim2.fromOffset(175, 50) end
-    if type(Config.Size) ~= 'UDim2' then Config.Size = UDim2.fromOffset(550, 570) end
-
-    if Config.Center then
-        Config.AnchorPoint = Vector2.new(0.5, 0.5)
-        Config.Position = UDim2.fromScale(0.5, 0.5)
-    end
-
-    local Window = {
-        Tabs = {};
-    };
-
-    local Outer = Library:Create('Frame', {
-        AnchorPoint = Config.AnchorPoint,
-        BackgroundColor3 = Color3.new(0, 0, 0);
-        BorderSizePixel = 0;
-        Position = Config.Position,
-        Size = Config.Size,
-        Visible = false;
-        ZIndex = 1;
-        Parent = ScreenGui;
-    });
-
-    local newSize = UDim2.new(
-        Config.Size.X.Scale, 
-        Config.Size.X.Offset + 57,
-        Config.Size.Y.Scale, 
-        Config.Size.Y.Offset + 57
-    );
-    local Image = Library:Create('ImageLabel', {
-        AnchorPoint = Config.AnchorPoint, 
-        BackgroundTransparency = 1,
-        Position = Config.Position,
-        Size = newSize,
-        Image = 'rbxassetid://6015897843',
-        ImageColor3 = Library.AccentColor,
-        ImageTransparency = 0,
-        ZIndex = 1,
-        Parent = Outer,
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-        BorderColor3 = Color3.fromRGB(0, 0, 0),
-        BorderSizePixel = 0,
-    });
-
-    Library:MakeDraggable(Outer, 25);
-
-    local Inner = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.AccentColor;
-        BorderMode = Enum.BorderMode.Inset;
-        Position = UDim2.new(0, 1, 0, 1);
-        Size = UDim2.new(1, -2, 1, -2);
-        ZIndex = 1;
-        Parent = Outer;
-    });
-
-    Library:AddToRegistry(Inner, {
-        BackgroundColor3 = 'MainColor';
-        BorderColor3 = 'AccentColor';
-    });
-
-    Library:AddToRegistry(Image, {
-        ImageColor3 = 'AccentColor';
-    });
-
-    local WindowLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 0, 0, 0);
-        Size = UDim2.new(1, 0, 0, 25);
-        Text = if Config.Version and Config.Version ~= "" then Config.Title .. " | v" .. Config.Version else Config.Title;
-        TextXAlignment = Enum.TextXAlignment.Center;
-        ZIndex = 1;
-        Parent = Inner;
-        RichText = true;
-        --BackgroundTransparency = 0;
-    });
-
-    local MainSectionOuter = Library:Create('Frame', {
-        BackgroundColor3 = Library.BackgroundColor;
-        BorderColor3 = Library.OutlineColor;
-        Position = UDim2.new(0, 8, 0, 25);
-        Size = UDim2.new(1, -16, 1, -33);
-        ZIndex = 1;
-        Parent = Inner;
-    });
-
-    Library:AddToRegistry(MainSectionOuter, {
-        BackgroundColor3 = 'BackgroundColor';
-        BorderColor3 = 'OutlineColor';
-    });
-
-    local MainSectionInner = Library:Create('Frame', {
-        BackgroundColor3 = Library.BackgroundColor;
-        BorderColor3 = Color3.new(0, 0, 0);
-        BorderMode = Enum.BorderMode.Inset;
-        Position = UDim2.new(0, 0, 0, 0);
-        Size = UDim2.new(1, 0, 1, 0);
-        ZIndex = 1;
-        Parent = MainSectionOuter;
-    });
-
-    Library:AddToRegistry(MainSectionInner, {
-        BackgroundColor3 = 'BackgroundColor';
-    });
-
-    local TabArea = Library:Create('Frame', {
-        BackgroundTransparency = 1;
-        Position = UDim2.new(0, 8, 0, 8);
-        Size = UDim2.new(1, -16, 0, 40);
-        ZIndex = 1;
-        Parent = MainSectionInner;
-    });
-
-    local TabListLayout = Library:Create('UIListLayout', {
-        Padding = UDim.new(0, 0);
-        FillDirection = Enum.FillDirection.Horizontal;
-        HorizontalAlignment = Enum.HorizontalAlignment.Center;
-        SortOrder = Enum.SortOrder.LayoutOrder;
-        Parent = TabArea;
-    });
-
-    local TabContainer = Library:Create('Frame', {
-        BackgroundColor3 = Library.MainColor;
-        BorderColor3 = Library.OutlineColor;
-        Position = UDim2.new(0, 8, 0, 54);
-        Size = UDim2.new(1, -16, 1, -60);
-        ZIndex = 2;
-        Parent = MainSectionInner;
-    });
-    
-
-    Library:AddToRegistry(TabContainer, {
-        BackgroundColor3 = 'MainColor';
-        BorderColor3 = 'OutlineColor';
-    });
-
-
-    function Window:SetWindowTitle(Title)
-        WindowLabel.Text = Title;
-    end;
-
-    local function UpdateTabButtonSizes()
-        local numTabs = #Window.Tabs
-        if numTabs == 0 then return end
-    
-        local tabAreaWidth = TabArea.AbsoluteSize.X
-        local padding = 0 * (numTabs - 1) 
-        local tabButtonWidth = (tabAreaWidth - padding) / numTabs  
-    
-        for _, tab in ipairs(Window.Tabs) do
-            tab.Button.Size = UDim2.new(0, tabButtonWidth, 1, 0)
-        end
-    end
-    
-    function Window:AddTab(Name)
-        local Tab = {
-            Groupboxes = {};
-            Tabboxes = {};
-        };
-    
-        local TabButton = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            Size = UDim2.new(0, 100, 1, 0); 
-            LayoutOrder = #Window.Tabs + 1; 
-            ZIndex = 1;
-            Parent = TabArea;
-        });
-    
-        Tab.Button = TabButton  -- Reference to adjust the size later
-    
-        Library:AddToRegistry(TabButton, {
-            BackgroundColor3 = 'BackgroundColor';
-            BorderColor3 = 'OutlineColor';
-        });
-    
-        local TabButtonLabel = Library:CreateLabel({
-            Position = UDim2.new(0, 0, 0, 0);
-            Size = UDim2.new(1, 0, 1, 0);
-            Text = Name;
-            ZIndex = 1;
-            Parent = TabButton;
-        });
-
-        local TabFrame = Library:Create('Frame', {
-            Name = 'TabFrame',
-            BackgroundTransparency = 1;
-            Position = UDim2.new(0, 0, 0, 0);
-            Size = UDim2.new(1, 0, 1, 0);
-            Visible = false;
-            ZIndex = 2;
-            Parent = TabContainer;
-        });
-    
-        local LeftSide = Library:Create('ScrollingFrame', {
-            BackgroundTransparency = 1;
-            BorderSizePixel = 0;
-            Position = UDim2.new(0, 8 - 1, 0, 8 - 1);
-            Size = UDim2.new(0.5, -12 + 2, 1, -8 + 1);
-            CanvasSize = UDim2.new(0, 0, 0, 0);
-            BottomImage = '';
-            TopImage = '';
-            ScrollBarThickness = 0;
-            ZIndex = 2;
-            Parent = TabFrame;
-        });
-    
-        local RightSide = Library:Create('ScrollingFrame', {
-            BackgroundTransparency = 1;
-            BorderSizePixel = 0;
-            Position = UDim2.new(0.5, 4 + 1, 0, 8 - 1);
-            Size = UDim2.new(0.5, -12 + 2, 1, -8 + 1);
-            CanvasSize = UDim2.new(0, 0, 0, 0);
-            BottomImage = '';
-            TopImage = '';
-            ScrollBarThickness = 0;
-            ZIndex = 2;
-            Parent = TabFrame;
-        });
-    
-        Library:Create('UIListLayout', {
-            Padding = UDim.new(0, 8);
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            HorizontalAlignment = Enum.HorizontalAlignment.Center;
-            Parent = LeftSide;
-        });
-    
-        Library:Create('UIListLayout', {
-            Padding = UDim.new(0, 8);
-            FillDirection = Enum.FillDirection.Vertical;
-            SortOrder = Enum.SortOrder.LayoutOrder;
-            HorizontalAlignment = Enum.HorizontalAlignment.Center;
-            Parent = RightSide;
-        });
-    
-        for _, Side in next, { LeftSide, RightSide } do
-            Side:WaitForChild('UIListLayout'):GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
-                Side.CanvasSize = UDim2.fromOffset(0, Side.UIListLayout.AbsoluteContentSize.Y);
-            end);
-        end;
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-        function Tab:ShowTab()
-            for _, Tab in next, Window.Tabs do
-                Tab:HideTab();
-            end;
-            TabButton.BackgroundColor3 = Library.MainColor;
-            Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor';
-            TabFrame.Visible = true;
-        end;
-    
-        function Tab:HideTab()
-            TabButton.BackgroundColor3 = Library.BackgroundColor;
-            Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
-            TabFrame.Visible = false;
-        end;
-    
-        function Tab:SetLayoutOrder(Position)
-            TabButton.LayoutOrder = Position;
-            TabListLayout:ApplyLayout();
-            UpdateTabButtonSizes()  
-        end;
-
-        table.insert(Window.Tabs, Tab)
-        UpdateTabButtonSizes()
-        
-
-        function Tab:AddGroupbox(Info)
-            local Groupbox = {};
-
-            local BoxOuter = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.new(1, 0, 0, 507 + 2);
-                ZIndex = 2;
-                Parent = Info.Side == 1 and LeftSide or RightSide;
-            });
-
-            Library:AddToRegistry(BoxOuter, {
-                BackgroundColor3 = 'BackgroundColor';
-                BorderColor3 = 'OutlineColor';
-            });
-
-            local BoxInner = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Color3.new(0, 0, 0);
-                Size = UDim2.new(1, -2, 1, -2);
-                Position = UDim2.new(0, 1, 0, 1);
-                ZIndex = 4;
-                Parent = BoxOuter;
-            });
-
-            Library:AddToRegistry(BoxInner, {
-                BackgroundColor3 = 'BackgroundColor';
-            });
-
-            local Highlight = Library:Create('Frame', {
-                BackgroundColor3 = Library.AccentColor;
-                BorderSizePixel = 0;
-                Size = UDim2.new(1, 0, 0, 2);
-                ZIndex = 5;
-                Parent = BoxInner;
-            });
-
-            Library:AddToRegistry(Highlight, {
-                BackgroundColor3 = 'AccentColor';
-            });
-
-            local GroupboxLabel = Library:CreateLabel({
-                Size = UDim2.new(1, 0, 0, 18);
-                Position = UDim2.new(0, 4, 0, 2);
-                TextSize = 14;
-                Text = Info.Name;
-                TextXAlignment = Enum.TextXAlignment.Center;
-                ZIndex = 5;
-                Parent = BoxInner;
-            });
-
-            local Container = Library:Create('Frame', {
-                BackgroundTransparency = 1;
-                Position = UDim2.new(0, 4, 0, 20);
-                Size = UDim2.new(1, -4, 1, -20);
-                ZIndex = 1;
-                Parent = BoxInner;
-            });
-
-            Library:Create('UIListLayout', {
-                FillDirection = Enum.FillDirection.Vertical;
-                SortOrder = Enum.SortOrder.LayoutOrder;
-                Parent = Container;
-            });
-
-            function Groupbox:Resize()
-                local Size = 0;
-
-                for _, Element in next, Groupbox.Container:GetChildren() do
-                    if (not Element:IsA('UIListLayout')) and Element.Visible then
-                        Size = Size + Element.Size.Y.Offset;
-                    end;
-                end;
-
-                BoxOuter.Size = UDim2.new(1, 0, 0, 20 + Size + 2 + 2);
-            end;
-
-            Groupbox.Container = Container;
-            setmetatable(Groupbox, BaseGroupbox);
-
-            Groupbox:AddBlank(3);
-            Groupbox:Resize();
-
-            Tab.Groupboxes[Info.Name] = Groupbox;
-
-            return Groupbox;
-        end;
-
-        function Tab:AddLeftGroupbox(Name)
-            return Tab:AddGroupbox({ Side = 1; Name = Name; });
-        end;
-
-        function Tab:AddRightGroupbox(Name)
-            return Tab:AddGroupbox({ Side = 2; Name = Name; });
-        end;
-
-        function Tab:AddTabbox(Info)
-            local Tabbox = {
-                Tabs = {};
-            };
-
-            local BoxOuter = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.new(1, 0, 0, 0);
-                ZIndex = 2;
-                Parent = Info.Side == 1 and LeftSide or RightSide;
-            });
-
-            Library:AddToRegistry(BoxOuter, {
-                BackgroundColor3 = 'BackgroundColor';
-                BorderColor3 = 'OutlineColor';
-            });
-
-            local BoxInner = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Color3.new(0, 0, 0);
-                Size = UDim2.new(1, -2, 1, -2);
-                Position = UDim2.new(0, 1, 0, 1);
-                ZIndex = 4;
-                Parent = BoxOuter;
-            });
-
-            Library:AddToRegistry(BoxInner, {
-                BackgroundColor3 = 'BackgroundColor';
-            });
-
-            local Highlight = Library:Create('Frame', {
-                BackgroundColor3 = Library.AccentColor;
-                BorderSizePixel = 0;
-                Size = UDim2.new(1, 0, 0, 2);
-                ZIndex = 10;
-                Parent = BoxInner;
-            });
-
-            Library:AddToRegistry(Highlight, {
-                BackgroundColor3 = 'AccentColor';
-            });
-
-            local TabboxButtons = Library:Create('Frame', {
-                BackgroundTransparency = 1;
-                Position = UDim2.new(0, 0, 0, 1);
-                Size = UDim2.new(1, 0, 0, 18);
-                ZIndex = 5;
-                Parent = BoxInner;
-            });
-
-            Library:Create('UIListLayout', {
-                FillDirection = Enum.FillDirection.Horizontal;
-                HorizontalAlignment = Enum.HorizontalAlignment.Left;
-                SortOrder = Enum.SortOrder.LayoutOrder;
-                Parent = TabboxButtons;
-            });
-
-            function Tabbox:AddTab(Name)
-                local Tab = {};
-
-                local Button = Library:Create('Frame', {
-                    BackgroundColor3 = Library.MainColor;
-                    BorderColor3 = Color3.new(0, 0, 0);
-                    Size = UDim2.new(0.5, 0, 1, 0);
-                    ZIndex = 6;
-                    Parent = TabboxButtons;
-                });
-
-                Library:AddToRegistry(Button, {
-                    BackgroundColor3 = 'MainColor';
-                });
-
-                local ButtonLabel = Library:CreateLabel({
-                    Size = UDim2.new(1, 0, 1, 0);
-                    TextSize = 14;
-                    Text = Name;
-                    TextXAlignment = Enum.TextXAlignment.Center;
-                    ZIndex = 7;
-                    Parent = Button;
-                });
-
-                local Block = Library:Create('Frame', {
-                    BackgroundColor3 = Library.BackgroundColor;
-                    BorderSizePixel = 0;
-                    Position = UDim2.new(0, 0, 1, 0);
-                    Size = UDim2.new(1, 0, 0, 1);
-                    Visible = false;
-                    ZIndex = 9;
-                    Parent = Button;
-                });
-
-                Library:AddToRegistry(Block, {
-                    BackgroundColor3 = 'BackgroundColor';
-                });
-
-                local Container = Library:Create('Frame', {
-                    BackgroundTransparency = 1;
-                    Position = UDim2.new(0, 4, 0, 20);
-                    Size = UDim2.new(1, -4, 1, -20);
-                    ZIndex = 1;
-                    Visible = false;
-                    Parent = BoxInner;
-                });
-
-                Library:Create('UIListLayout', {
-                    FillDirection = Enum.FillDirection.Vertical;
-                    SortOrder = Enum.SortOrder.LayoutOrder;
-                    Parent = Container;
-                });
-
-                function Tab:Show()
-                    for _, Tab in next, Tabbox.Tabs do
-                        Tab:Hide();
-                    end;
-
-                    Container.Visible = true;
-                    Block.Visible = true;
-
-                    Button.BackgroundColor3 = Library.BackgroundColor;
-                    Library.RegistryMap[Button].Properties.BackgroundColor3 = 'BackgroundColor';
-
-                    Tab:Resize();
-                end;
-
-                function Tab:Hide()
-                    Container.Visible = false;
-                    Block.Visible = false;
-
-                    Button.BackgroundColor3 = Library.MainColor;
-                    Library.RegistryMap[Button].Properties.BackgroundColor3 = 'MainColor';
-                end;
-
-                function Tab:Resize()
-                    local TabCount = 0;
-
-                    for _, Tab in next, Tabbox.Tabs do
-                        TabCount = TabCount + 1;
-                    end;
-
-                    for _, Button in next, TabboxButtons:GetChildren() do
-                        if not Button:IsA('UIListLayout') then
-                            Button.Size = UDim2.new(1 / TabCount, 0, 1, 0);
-                        end;
-                    end;
-
-                    if (not Container.Visible) then
-                        return;
-                    end;
-
-                    local Size = 0;
-
-                    for _, Element in next, Tab.Container:GetChildren() do
-                        if (not Element:IsA('UIListLayout')) and Element.Visible then
-                            Size = Size + Element.Size.Y.Offset;
-                        end;
-                    end;
-
-                    BoxOuter.Size = UDim2.new(1, 0, 0, 20 + Size + 2 + 2);
-                end;
-
-                Button.InputBegan:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                        Tab:Show();
-                        Tab:Resize();
-                    end;
-                end);
-                -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-                -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-                -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-                -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-             -- ZGlzY29yZC5nZy9mZW50d2luIHwgaHR0cHM6Ly9kcmFuay5jYw==
-
-                Tab.Container = Container;
-                Tabbox.Tabs[Name] = Tab;
-
-                setmetatable(Tab, BaseGroupbox);
-
-                Tab:AddBlank(3);
-                Tab:Resize();
-
-                if #TabboxButtons:GetChildren() == 2 then
-                    Tab:Show();
-                end;
-
-                return Tab;
-            end;
-
-            Tab.Tabboxes[Info.Name or ''] = Tabbox;
-
-            return Tabbox;
-        end;
-
-        function Tab:AddLeftTabbox(Name)
-            return Tab:AddTabbox({ Name = Name, Side = 1; });
-        end;
-
-        function Tab:AddRightTabbox(Name)
-            return Tab:AddTabbox({ Name = Name, Side = 2; });
-        end;
-
-        TabButton.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                Tab:ShowTab();
-            end;
-        end);
-
-        if #TabContainer:GetChildren() == 1 then
-            Tab:ShowTab();
-        end;
-
-        Window.Tabs[Name] = Tab;
-        return Tab;
-    end;
-
-    local ModalElement = Library:Create('TextButton', {
-        BackgroundTransparency = 1;
-        Size = UDim2.new(0, 0, 0, 0);
-        Visible = true;
-        Text = '';
-        Modal = false;
-        Parent = ScreenGui;
-    });
-
-    local TransparencyCache = {};
-    local Toggled = false;
-    local Fading = false;
-
-    function Library:Toggle()
-        if Fading then
-            return;
-        end;
-
-        local FadeTime = Config.MenuFadeTime;
-        Fading = true;
-        Toggled = (not Toggled);
-        ModalElement.Modal = Toggled;
-
-        if Toggled then
-            Outer.Visible = true;
-
-            task.spawn(function()
-                -- TODO: add cursor fade?
-                local State = InputService.MouseIconEnabled;
-
-                local Cursor = Drawing.new('Triangle');
-                Cursor.Thickness = 1;
-                Cursor.Filled = true;
-                Cursor.Visible = true;
-
-                local CursorOutline = Drawing.new('Triangle');
-                CursorOutline.Thickness = 1;
-                CursorOutline.Filled = false;
-                CursorOutline.Color = Color3.new(1, 1, 1);
-                CursorOutline.Visible = true;
-
-                while Toggled and ScreenGui.Parent do
-                    InputService.MouseIconEnabled = false;
-
-                    local mPos = InputService:GetMouseLocation();
-
-                    Cursor.Color = Library.AccentColor;
-
-                    Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
-                    Cursor.PointB = Vector2.new(mPos.X + 16, mPos.Y + 6);
-                    Cursor.PointC = Vector2.new(mPos.X + 6, mPos.Y + 16);
-
-                    CursorOutline.PointA = Cursor.PointA;
-                    CursorOutline.PointB = Cursor.PointB;
-                    CursorOutline.PointC = Cursor.PointC;
-
-                    RenderStepped:Wait();
-                end;
-
-                InputService.MouseIconEnabled = State;
-
-                Cursor:Remove();
-                CursorOutline:Remove();
-            end);
-        end;
-
-        for _, Desc in next, Outer:GetDescendants() do
-            local Properties = {};
-
-            if Desc:IsA('ImageLabel') then
-                table.insert(Properties, 'ImageTransparency');
-                table.insert(Properties, 'BackgroundTransparency');
-            elseif Desc:IsA('TextLabel') or Desc:IsA('TextBox') then
-                table.insert(Properties, 'TextTransparency');
-            elseif Desc:IsA('Frame') or Desc:IsA('ScrollingFrame') then
-                table.insert(Properties, 'BackgroundTransparency');
-            elseif Desc:IsA('UIStroke') then
-                table.insert(Properties, 'Transparency');
-            end;
-
-            local Cache = TransparencyCache[Desc];
-
-            if (not Cache) then
-                Cache = {};
-                TransparencyCache[Desc] = Cache;
-            end;
-
-            for _, Prop in next, Properties do
-                if not Cache[Prop] then
-                    Cache[Prop] = Desc[Prop];
-                end;
-
-                if Cache[Prop] == 1 then
-                    continue;
-                end;
-
-                TweenService:Create(Desc, TweenInfo.new(FadeTime, Enum.EasingStyle.Linear), { [Prop] = Toggled and Cache[Prop] or 1 }):Play();
-            end;
-        end;
-
-        task.wait(FadeTime);
-
-        Outer.Visible = Toggled;
-
-        Fading = false;
-    end
-
-    Library:GiveSignal(InputService.InputBegan:Connect(function(Input, Processed)
-        if type(Library.ToggleKeybind) == 'table' and Library.ToggleKeybind.Type == 'KeyPicker' then
-            if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode.Name == Library.ToggleKeybind.Value then
-                task.spawn(Library.Toggle)
-            end
-        elseif Input.KeyCode == Enum.KeyCode.LeftControl or (Input.KeyCode == Enum.KeyCode.LeftAlt and (not Processed)) then
-            task.spawn(Library.Toggle)
-        end
-    end))
-
-    if Config.AutoShow then task.spawn(Library.Toggle) end
-
-    Window.Holder = Outer;
-
-    return Window;
-end;
-
-local function OnPlayerChange()
-    local PlayerList = GetPlayersString();
-
-    for _, Value in next, Options do
-        if Value.Type == 'Dropdown' and Value.SpecialType == 'Player' then
-            Value:SetValues(PlayerList);
-        end;
-    end;
-end;
-
-Players.PlayerAdded:Connect(OnPlayerChange);
-Players.PlayerRemoving:Connect(OnPlayerChange);
-
-getgenv().Library = Library
-
-for i,v in pairs(({"Internal","HttpCache","Instances","Signals","Script","PhysicsCollision","PhysicsParts","GraphicsSolidModels","GraphicsMeshParts","GraphicsParticles","GraphicsParts","GraphicsSpatialHash","GraphicsTerrain","GraphicsTexture","GraphicsTextureCharacter","Sounds","StreamingSounds","TerrainVoxels","Gui","Animation","Navigation","GeometryCSG"})) do
-    memorystats.restore(v)
+return self
 end
-return Library, Toggles, Options
+
+function t:AddKeyPicker(aa,ab)
+local ac,
+u,_,_,
+
+
+
+
+w=self,self.TextLabel,self.Container,ab.Default,{
+Value=ab.Default;
+Toggled=false;
+Mode=ab.Mode or'Toggle';
+Type='KeyPicker';
+Callback=ab.Callback or function(w)end;
+ChangedCallback=ab.ChangedCallback or function(w)end;
+
+SyncToggleState=ab.SyncToggleState or false;
+}
+
+if w.SyncToggleState then
+ab.Modes={'Toggle'}
+ab.Mode='Toggle'
+end
+
+local x=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(0,28,0,15);
+ZIndex=6;
+Parent=u;
+})
+
+local y=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=7;
+Parent=x;
+})
+
+p:AddToRegistry(y,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+local z,
+
+
+
+
+
+
+
+
+A=p:CreateLabel({Size=UDim2.new(1,0,1,0);TextSize=13;Text=ab.Default;TextWrapped=true;ZIndex=8;Parent=y;}),p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.fromOffset(u.AbsolutePosition.X+u.AbsoluteSize.X+4,u.AbsolutePosition.Y+1);
+Size=UDim2.new(0,60,0,45+2);
+Visible=false;
+ZIndex=14;
+Parent=m;
+})
+
+u:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+A.Position=UDim2.fromOffset(u.AbsolutePosition.X+u.AbsoluteSize.X+4,u.AbsolutePosition.Y+1)
+end)
+
+local B=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=15;
+Parent=A;
+})
+
+p:AddToRegistry(B,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=B;
+})
+
+local C,
+
+
+
+
+
+
+
+
+D,
+E=p:CreateLabel({TextXAlignment=Enum.TextXAlignment.Left;Size=UDim2.new(1,0,0,18);TextSize=13;Visible=false;ZIndex=110;Parent=p.KeybindContainer;},true),ab.Modes or{'Always','Toggle','Hold'},{}
+
+for F,G in next,D do
+local H,
+
+I={},p:CreateLabel({
+Active=false;
+Size=UDim2.new(1,0,0,15);
+TextSize=13;
+Text=G;
+ZIndex=16;
+Parent=B;
+})
+
+function H:Select()
+for J,K in next,E do
+K:Deselect()
+end
+
+w.Mode=G
+
+I.TextColor3=p.AccentColor
+p.RegistryMap[I].Properties.TextColor3='AccentColor'
+
+A.Visible=false
+end
+
+function H:Deselect()
+w.Mode=nil
+
+I.TextColor3=p.FontColor
+p.RegistryMap[I].Properties.TextColor3='FontColor'
+end
+
+I.InputBegan:Connect(function(J)
+if J.UserInputType==Enum.UserInputType.MouseButton1 then
+H:Select()
+p:AttemptSave()
+end
+end)
+
+if G==w.Mode then
+H:Select()
+end
+
+E[G]=H
+end
+
+function w:Update()
+if ab.NoUI then
+return
+end
+
+local H=w:GetState()
+
+C.Text=string.format('[%s] %s (%s)',w.Value,ab.Text,w.Mode)
+
+C.Visible=true
+C.TextColor3=H and p.AccentColor or p.FontColor
+
+p.RegistryMap[C].Properties.TextColor3=H and'AccentColor'or'FontColor'
+
+local I,
+J=0,0
+
+for K,L in next,p.KeybindContainer:GetChildren()do
+if L:IsA('TextLabel')and L.Visible then
+I=I+18
+if(L.TextBounds.X>J)then
+J=L.TextBounds.X
+end
+end
+end
+
+p.KeybindFrame.Size=UDim2.new(0,math.max(J+10,210),0,I+23)
+end
+
+function w:GetState()
+if w.Mode=='Always'then
+return true
+elseif w.Mode=='Hold'then
+if w.Value=='None'then
+return false
+end
+
+local H=w.Value
+
+if H=='MB1'or H=='MB2'then
+return H=='MB1'and c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
+or H=='MB2'and c:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
+else
+return c:IsKeyDown(Enum.KeyCode[w.Value])
+end
+else
+return w.Toggled
+end
+end
+
+function w:SetValue(H)
+local I,J=H[1],H[2]
+z.Text=I
+w.Value=I
+E[J]:Select()
+w:Update()
+end
+
+function w:OnClick(H)
+w.Clicked=H
+end
+
+function w:OnChanged(H)
+w.Changed=H
+H(w.Value)
+end
+
+if ac.Addons then
+table.insert(ac.Addons,w)
+end
+
+function w:DoClick()
+if ac.Type=='Toggle'and w.SyncToggleState then
+ac:SetValue(not ac.Value)
+end
+
+p:SafeCallback(w.Callback,w.Toggled)
+p:SafeCallback(w.Clicked,w.Toggled)
+end
+
+local H=false
+
+x.InputBegan:Connect(function(I)
+if I.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+H=true
+
+z.Text=''
+
+local J,
+K=nil,''
+
+task.spawn(function()
+while(not J)do
+if K=='...'then
+K=''
+end
+
+K=K..'.'
+z.Text=K
+
+wait(0.4)
+end
+end)
+
+wait(0.2)
+
+local L
+L=c.InputBegan:Connect(function(M)
+local N
+
+if M.UserInputType==Enum.UserInputType.Keyboard then
+N=M.KeyCode.Name
+elseif M.UserInputType==Enum.UserInputType.MouseButton1 then
+N='MB1'
+elseif M.UserInputType==Enum.UserInputType.MouseButton2 then
+N='MB2'
+end
+
+J=true
+H=false
+
+z.Text=N
+w.Value=N
+
+p:SafeCallback(w.ChangedCallback,M.KeyCode or M.UserInputType)
+p:SafeCallback(w.Changed,M.KeyCode or M.UserInputType)
+
+p:AttemptSave()
+
+L:Disconnect()
+end)
+elseif I.UserInputType==Enum.UserInputType.MouseButton2 and not p:MouseIsOverOpenedFrame()then
+A.Visible=true
+end
+end)
+
+p:GiveSignal(c.InputBegan:Connect(function(I)
+if(not H)then
+if w.Mode=='Toggle'then
+local J=w.Value
+
+if J=='MB1'or J=='MB2'then
+if J=='MB1'and I.UserInputType==Enum.UserInputType.MouseButton1
+or J=='MB2'and I.UserInputType==Enum.UserInputType.MouseButton2 then
+w.Toggled=not w.Toggled
+w:DoClick()
+end
+elseif I.UserInputType==Enum.UserInputType.Keyboard then
+if I.KeyCode.Name==J then
+w.Toggled=not w.Toggled
+w:DoClick()
+end
+end
+end
+
+w:Update()
+end
+
+if I.UserInputType==Enum.UserInputType.MouseButton1 then
+local J,K=A.AbsolutePosition,A.AbsoluteSize
+
+if l.X<J.X or l.X>J.X+K.X
+or l.Y<(J.Y-20-1)or l.Y>J.Y+K.Y then
+
+A.Visible=false
+end
+end
+end))
+
+p:GiveSignal(c.InputEnded:Connect(function(I)
+if(not H)then
+w:Update()
+end
+end))
+
+w:Update()
+
+o[F]=w
+
+return self
+end
+
+s.__index=t
+s.__namecall=function(aa,ab,...)
+return t[ab](...)
+end
+end
+
+local aa={}
+
+do
+local ab={}
+
+function ab:AddBlank(ac)
+local t=self
+local u=t.Container
+
+p:Create('Frame',{
+BackgroundTransparency=1;
+Size=UDim2.new(1,0,0,ac);
+ZIndex=1;
+Parent=u;
+})
+end
+
+function ab:AddLabel(ac,t)
+local u,
+
+v={},self
+local w=v.Container
+
+local x=p:CreateLabel({
+Size=UDim2.new(1,-4,0,15);
+TextSize=14;
+Text=ac;
+TextWrapped=t or false,
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=5;
+Parent=w;
+})
+
+if t then
+local y=select(2,p:GetTextBounds(ac,p.Font,14,Vector2.new(x.AbsoluteSize.X,math.huge)))
+x.Size=UDim2.new(1,-4,0,y)
+else
+p:Create('UIListLayout',{
+Padding=UDim.new(0,4);
+FillDirection=Enum.FillDirection.Horizontal;
+HorizontalAlignment=Enum.HorizontalAlignment.Right;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=x;
+})
+end
+
+u.TextLabel=x
+u.Container=w
+
+function u:SetText(y)
+x.Text=y
+
+if t then
+local z=select(2,p:GetTextBounds(y,p.Font,14,Vector2.new(x.AbsoluteSize.X,math.huge)))
+x.Size=UDim2.new(1,-4,0,z)
+end
+
+v:Resize()
+end
+
+if(not t)then
+setmetatable(u,s)
+end
+
+v:AddBlank(5)
+v:Resize()
+
+return u
+end
+
+function ab:AddSpacer(ac)
+local t,
+
+u={},self
+local v=u.Container
+
+local w=p:Create('Frame',{
+Size=UDim2.new(1,-4,0,ac or 10);
+BackgroundTransparency=1;
+Parent=v;
+ZIndex=5;
+})
+
+t.Frame=w
+t.Container=v
+
+function t:SetHeight(x)
+w.Size=UDim2.new(1,-4,0,x)
+u:Resize()
+end
+
+u:AddBlank(5)
+u:Resize()
+
+return t
+end
+
+
+
+function ab:AddButton(...)
+
+local ac={}local ProcessButtonParams=function(
+t, u, ...)
+local v=select(1,...)
+if type(v)=='table'then
+u.Text=v.Text
+u.Func=v.Func
+u.DoubleClick=v.DoubleClick
+u.Tooltip=v.Tooltip
+else
+u.Text=select(1,...)
+u.Func=select(2,...)
+end local _=
+
+type(u.Func)=='function'end
+
+
+ProcessButtonParams('Button',ac,...)
+
+local t=self
+local u=t.Container local CreateBaseButton=function(
+
+v)
+local w=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-4,0,20);
+ZIndex=5;
+})
+
+local x=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=w;
+})
+
+local y=p:CreateLabel({
+Size=UDim2.new(1,0,1,0);
+TextSize=14;
+Text=v.Text;
+ZIndex=6;
+Parent=x;
+})
+
+p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,Color3.new(1,1,1)),
+ColorSequenceKeypoint.new(1,Color3.fromRGB(212,212,212))
+});
+Rotation=90;
+Parent=x;
+})
+
+p:AddToRegistry(w,{
+BorderColor3='Black';
+})
+
+p:AddToRegistry(x,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+p:OnHighlight(w,w,
+{BorderColor3='AccentColor'},
+{BorderColor3='Black'}
+)
+
+return w,x,y end local InitEvents=function(
+
+
+v)local WaitForEvent=function(
+w, x, y)
+local z=Instance.new('BindableEvent')
+local A=w:Once(function(...)
+
+if type(y)=='function'and y(...)then
+z:Fire(true)
+else
+z:Fire(false)
+end
+end)
+task.delay(x,function()
+A:disconnect()
+z:Fire(false)
+end)
+return z.Event:Wait()end local ValidateClick=function(
+
+
+w)
+if p:MouseIsOverOpenedFrame()then
+return false
+end
+
+if w.UserInputType~=Enum.UserInputType.MouseButton1 then
+return false
+end
+
+return true end
+
+
+v.Outer.InputBegan:Connect(function(w)
+if not ValidateClick(w)then return end
+if v.Locked then return end
+
+if v.DoubleClick then
+p:RemoveFromRegistry(v.Label)
+p:AddToRegistry(v.Label,{TextColor3='AccentColor'})
+
+v.Label.TextColor3=p.AccentColor
+v.Label.Text='Are you sure?'
+v.Locked=true
+
+local x=WaitForEvent(v.Outer.InputBegan,0.5,ValidateClick)
+
+p:RemoveFromRegistry(v.Label)
+p:AddToRegistry(v.Label,{TextColor3='FontColor'})
+
+v.Label.TextColor3=p.FontColor
+v.Label.Text=v.Text
+task.defer(rawset,v,'Locked',false)
+
+if x then
+p:SafeCallback(v.Func)
+end
+
+return
+end
+
+p:SafeCallback(v.Func)
+end)end
+
+
+ac.Outer,ac.Inner,ac.Label=CreateBaseButton(ac)
+ac.Outer.Parent=u
+
+InitEvents(ac)
+
+function ac:AddTooltip(v)
+if type(v)=='string'then
+p:AddToolTip(v,self.Outer)
+end
+return self
+end
+
+
+function ac:AddButton(...)
+local v={}
+
+ProcessButtonParams('SubButton',v,...)
+
+self.Outer.Size=UDim2.new(0.5,-2,0,20)
+
+v.Outer,v.Inner,v.Label=CreateBaseButton(v)
+
+v.Outer.Position=UDim2.new(1,3,0,0)
+v.Outer.Size=UDim2.fromOffset(self.Outer.AbsoluteSize.X-2,self.Outer.AbsoluteSize.Y)
+v.Outer.Parent=self.Outer
+
+function v:AddTooltip(w)
+if type(w)=='string'then
+p:AddToolTip(w,self.Outer)
+end
+return v
+end
+
+if type(v.Tooltip)=='string'then
+v:AddTooltip(v.Tooltip)
+end
+
+InitEvents(v)
+return v
+end
+
+if type(ac.Tooltip)=='string'then
+ac:AddTooltip(ac.Tooltip)
+end
+
+t:AddBlank(5)
+t:Resize()
+
+return ac
+end
+
+function ab:AddDivider()
+local ac,
+t=self,self.Container
+
+
+
+
+
+ac:AddBlank(2)
+local v=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-4,0,5);
+ZIndex=5;
+Parent=t;
+})
+
+local w=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=v;
+})
+
+p:AddToRegistry(v,{
+BorderColor3='Black';
+})
+
+p:AddToRegistry(w,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+ac:AddBlank(9)
+ac:Resize()
+end
+
+function ab:AddInput(ac,t)local _, 
+
+
+u, 
+
+
+
+
+
+
+
+v=t.Text, {Value=t.Default or'';Numeric=t.Numeric or false;Finished=t.Finished or false;Type='Input';Callback=t.Callback or function(u)end;}, self
+local w=v.Container
+
+p:CreateLabel({
+Size=UDim2.new(1,0,0,15);
+TextSize=14;
+Text=t.Text;
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=5;
+Parent=w;
+})
+
+v:AddBlank(1)
+
+local y=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-4,0,20);
+ZIndex=5;
+Parent=w;
+})
+
+local z=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=y;
+})
+
+p:AddToRegistry(z,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+p:OnHighlight(y,y,
+{BorderColor3='AccentColor'},
+{BorderColor3='Black'}
+)
+
+if type(t.Tooltip)=='string'then
+p:AddToolTip(t.Tooltip,y)
+end
+
+p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,Color3.new(1,1,1)),
+ColorSequenceKeypoint.new(1,Color3.fromRGB(212,212,212))
+});
+Rotation=90;
+Parent=z;
+})
+
+local A=p:Create('Frame',{
+BackgroundTransparency=1;
+ClipsDescendants=true;
+
+Position=UDim2.new(0,5,0,0);
+Size=UDim2.new(1,-5,1,0);
+
+ZIndex=7;
+Parent=z;
+})
+
+local B=p:Create('TextBox',{
+BackgroundTransparency=1;
+
+Position=UDim2.fromOffset(0,0),
+Size=UDim2.fromScale(5,1),
+
+Font=p.Font;
+PlaceholderColor3=Color3.fromRGB(190,190,190);
+PlaceholderText=t.Placeholder or'';
+
+Text=t.Default or'';
+TextColor3=p.FontColor;
+TextSize=14;
+TextStrokeTransparency=0;
+TextXAlignment=Enum.TextXAlignment.Left;
+
+ZIndex=7;
+Parent=A;
+})
+
+p:ApplyTextStroke(B)
+
+function u:SetValue(C)
+if t.MaxLength and#C>t.MaxLength then
+C=C:sub(1,t.MaxLength)
+end
+
+if u.Numeric then
+if(not tonumber(C))and C:len()>0 then
+C=u.Value
+end
+end
+
+u.Value=C
+B.Text=C
+
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+end
+
+if u.Finished then
+B.FocusLost:Connect(function(C)
+if not C then return end
+
+u:SetValue(B.Text)
+p:AttemptSave()
+end)
+else
+B:GetPropertyChangedSignal('Text'):Connect(function()
+u:SetValue(B.Text)
+p:AttemptSave()
+end)
+end local Update=function()
+
+
+
+
+
+local C,
+D=2,A.AbsoluteSize.X
+
+if not B:IsFocused()or B.TextBounds.X<=D-2*C then
+
+B.Position=UDim2.new(0,C,0,0)
+else
+
+local E=B.CursorPosition
+if E~=-1 then
+
+local F=string.sub(B.Text,1,E-1)
+local G=d:GetTextSize(F,B.TextSize,B.Font,Vector2.new(math.huge,math.huge)).X
+
+
+local H=B.Position.X.Offset+G
+
+
+if H<C then
+B.Position=UDim2.fromOffset(C-G,0)
+elseif H>D-C-1 then
+B.Position=UDim2.fromOffset(D-G-C-1,0)
+end
+end
+end end
+
+
+task.spawn(Update)
+
+B:GetPropertyChangedSignal('Text'):Connect(Update)
+B:GetPropertyChangedSignal('CursorPosition'):Connect(Update)
+B.FocusLost:Connect(Update)
+B.Focused:Connect(Update)
+
+p:AddToRegistry(B,{
+TextColor3='FontColor';
+})
+
+function u:OnChanged(C)
+u.Changed=C
+C(u.Value)
+end
+
+v:AddBlank(5)
+v:Resize()
+
+o[ac]=u
+
+return u
+end
+
+function ab:AddToggle(ac,t)local _, 
+
+
+u, 
+
+
+
+
+
+
+
+
+v=t.Text, {Value=t.Default or false;Type='Toggle';Callback=t.Callback or function(u)end;Addons={},Risky=t.Risky,}, self
+local x=v.Container
+
+local y=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(0,13,0,13);
+ZIndex=5;
+Parent=x;
+})
+
+p:AddToRegistry(y,{
+BorderColor3='Black';
+})
+
+local z=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=y;
+})
+
+p:AddToRegistry(z,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+local A=p:CreateLabel({
+Size=UDim2.new(0,216,1,0);
+Position=UDim2.new(1,6,0,0);
+TextSize=14;
+Text=t.Text;
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=6;
+Parent=z;
+})
+
+p:Create('UIListLayout',{
+Padding=UDim.new(0,4);
+FillDirection=Enum.FillDirection.Horizontal;
+HorizontalAlignment=Enum.HorizontalAlignment.Right;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=A;
+})
+
+local B=p:Create('Frame',{
+BackgroundTransparency=1;
+Size=UDim2.new(0,170,1,0);
+ZIndex=8;
+Parent=y;
+})
+
+p:OnHighlight(B,y,
+{BorderColor3='AccentColor'},
+{BorderColor3='Black'}
+)
+
+function u:UpdateColors()
+u:Display()
+end
+
+if type(t.Tooltip)=='string'then
+p:AddToolTip(t.Tooltip,B)
+end
+
+function u:Display()
+z.BackgroundColor3=u.Value and p.AccentColor or p.MainColor
+z.BorderColor3=u.Value and p.AccentColorDark or p.OutlineColor
+
+p.RegistryMap[z].Properties.BackgroundColor3=u.Value and'AccentColor'or'MainColor'
+p.RegistryMap[z].Properties.BorderColor3=u.Value and'AccentColorDark'or'OutlineColor'
+end
+
+function u:OnChanged(C)
+u.Changed=C
+C(u.Value)
+end
+
+function u:SetValue(C)
+C=(not not C)
+
+u.Value=C
+u:Display()
+
+for D,E in next,u.Addons do
+if E.Type=='KeyPicker'and E.SyncToggleState then
+E.Toggled=C
+E:Update()
+end
+end
+
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+p:UpdateDependencyBoxes()
+end
+
+B.InputBegan:Connect(function(C)
+if C.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+u:SetValue(not u.Value)
+p:AttemptSave()
+end
+end)
+
+if u.Risky then
+p:RemoveFromRegistry(A)
+A.TextColor3=p.RiskColor
+p:AddToRegistry(A,{TextColor3='RiskColor'})
+end
+
+u:Display()
+v:AddBlank(t.BlankSize or 5+2)
+v:Resize()
+
+u.TextLabel=A
+u.Container=x
+setmetatable(u,s)
+
+n[ac]=u
+
+p:UpdateDependencyBoxes()
+
+return u
+end
+
+function ab:AddSlider(ac,t)local _, _, _, _, _, 
+
+
+
+
+
+
+u, 
+
+
+
+
+
+
+
+
+
+v=t.Default, t.Text, t.Min, t.Max, t.Rounding, {Value=t.Default;Min=t.Min;Max=t.Max;Rounding=t.Rounding;MaxSize=232;Type='Slider';Callback=t.Callback or function(u)end;}, self
+local x=v.Container
+
+if not t.Compact then
+p:CreateLabel({
+Size=UDim2.new(1,0,0,10);
+TextSize=14;
+Text=t.Text;
+TextXAlignment=Enum.TextXAlignment.Left;
+TextYAlignment=Enum.TextYAlignment.Bottom;
+ZIndex=5;
+Parent=x;
+})
+
+v:AddBlank(3)
+end
+
+local y=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-4,0,13);
+ZIndex=5;
+Parent=x;
+})
+
+p:AddToRegistry(y,{
+BorderColor3='Black';
+})
+
+local z=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=y;
+})
+
+p:AddToRegistry(z,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+local A=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderColor3=p.AccentColorDark;
+Size=UDim2.new(0,0,1,0);
+ZIndex=7;
+Parent=z;
+})
+
+p:AddToRegistry(A,{
+BackgroundColor3='AccentColor';
+BorderColor3='AccentColorDark';
+})
+
+local B=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderSizePixel=0;
+Position=UDim2.new(1,0,0,0);
+Size=UDim2.new(0,1,1,0);
+ZIndex=8;
+Parent=A;
+})
+
+p:AddToRegistry(B,{
+BackgroundColor3='AccentColor';
+})
+
+local C=p:CreateLabel({
+Size=UDim2.new(1,0,1,0);
+TextSize=14;
+Text='Infinite';
+ZIndex=9;
+Parent=z;
+})
+
+p:OnHighlight(y,y,
+{BorderColor3='AccentColor'},
+{BorderColor3='Black'}
+)
+
+if type(t.Tooltip)=='string'then
+p:AddToolTip(t.Tooltip,y)
+end
+
+function u:UpdateColors()
+A.BackgroundColor3=p.AccentColor
+A.BorderColor3=p.AccentColorDark
+end
+
+function u:Display()
+local D=t.Suffix or''
+
+if t.Compact then
+C.Text=t.Text..': '..u.Value..D
+elseif t.HideMax then
+C.Text=string.format('%s',u.Value..D)
+else
+C.Text=string.format('%s/%s',u.Value..D,u.Max..D)
+end
+
+local E=math.ceil(p:MapValue(u.Value,u.Min,u.Max,0,u.MaxSize))
+A.Size=UDim2.new(0,E,1,0)
+
+B.Visible=not(E==u.MaxSize or E==0)
+end
+
+function u:OnChanged(D)
+u.Changed=D
+D(u.Value)
+end local Round=function(
+
+D)
+if u.Rounding==0 then
+return math.floor(D)
+end
+
+
+return tonumber(string.format('%.'..u.Rounding..'f',D))end
+
+
+function u:GetValueFromXOffset(D)
+return Round(p:MapValue(D,0,u.MaxSize,u.Min,u.Max))
+end
+
+function u:SetValue(D)
+local E=tonumber(D)
+
+if(not E)then
+return
+end
+
+E=math.clamp(E,u.Min,u.Max)
+
+u.Value=E
+u:Display()
+
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+end
+
+z.InputBegan:Connect(function(D)
+if D.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+local E,
+F=l.X,A.Size.X.Offset
+local G=E-(A.AbsolutePosition.X+F)
+
+while c:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)do
+local H=l.X
+local I=math.clamp(F+(H-E)+G,0,u.MaxSize)
+
+local J,
+K=u:GetValueFromXOffset(I),u.Value
+u.Value=J
+
+u:Display()
+
+if J~=K then
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+end
+
+j:Wait()
+end
+
+p:AttemptSave()
+end
+end)
+
+u:Display()
+v:AddBlank(t.BlankSize or 6)
+v:Resize()
+
+o[ac]=u
+
+return u
+end
+
+function ab:AddDropdown(ac,t)
+if t.SpecialType=='Player'then
+t.Values=GetPlayersString()
+t.AllowNull=true
+elseif t.SpecialType=='Team'then
+t.Values=GetTeamsString()
+t.AllowNull=true
+end local _, _=
+
+t.Values, 
+t.AllowNull or t.Default
+
+if(not t.Text)then
+t.Compact=true
+end
+
+local u,
+
+
+
+
+
+
+
+
+v={Values=t.Values;Value=t.Multi and{};Multi=t.Multi;Type='Dropdown';SpecialType=t.SpecialType;Callback=t.Callback or function(u)end;},self
+local x,
+
+y=v.Container,0
+
+if not t.Compact then
+p:CreateLabel({
+Size=UDim2.new(1,0,0,10);
+TextSize=14;
+Text=t.Text;
+TextXAlignment=Enum.TextXAlignment.Left;
+TextYAlignment=Enum.TextYAlignment.Bottom;
+ZIndex=5;
+Parent=x;
+})
+
+v:AddBlank(3)
+end
+
+for z,A in next,x:GetChildren()do
+if not A:IsA('UIListLayout')then
+y=y+A.Size.Y.Offset
+end
+end
+
+local B=p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-4,0,20);
+ZIndex=5;
+Parent=x;
+})
+
+p:AddToRegistry(B,{
+BorderColor3='Black';
+})
+
+local C=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=6;
+Parent=B;
+})
+
+p:AddToRegistry(C,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,Color3.new(1,1,1)),
+ColorSequenceKeypoint.new(1,Color3.fromRGB(212,212,212))
+});
+Rotation=90;
+Parent=C;
+})
+
+local D,
+
+
+
+
+
+
+
+
+
+E=p:Create('ImageLabel',{AnchorPoint=Vector2.new(0,0.5);BackgroundTransparency=1;Position=UDim2.new(1,-16,0.5,0);Size=UDim2.new(0,12,0,12);Image='http://www.roblox.com/asset/?id=6282522798';ZIndex=8;Parent=C;}),p:CreateLabel({
+Position=UDim2.new(0,5,0,0);
+Size=UDim2.new(1,-5,1,0);
+TextSize=14;
+Text='--';
+TextXAlignment=Enum.TextXAlignment.Left;
+TextWrapped=true;
+ZIndex=7;
+Parent=C;
+})
+
+p:OnHighlight(B,B,
+{BorderColor3='AccentColor'},
+{BorderColor3='Black'}
+)
+
+if type(t.Tooltip)=='string'then
+p:AddToolTip(t.Tooltip,B)
+end
+
+local F,
+
+G=8,p:Create('Frame',{
+BackgroundColor3=Color3.new(0,0,0);
+BorderColor3=Color3.new(0,0,0);
+ZIndex=20;
+Visible=false;
+Parent=m;
+})local RecalculateListPosition=function()
+
+
+G.Position=UDim2.fromOffset(B.AbsolutePosition.X,B.AbsolutePosition.Y+B.Size.Y.Offset+1)end local RecalculateListSize=function(
+
+
+H)
+G.Size=UDim2.fromOffset(B.AbsoluteSize.X,H or(F*20+2))end
+
+
+RecalculateListPosition()
+RecalculateListSize()
+
+B:GetPropertyChangedSignal('AbsolutePosition'):Connect(RecalculateListPosition)
+
+local H=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+BorderSizePixel=0;
+Size=UDim2.new(1,0,1,0);
+ZIndex=21;
+Parent=G;
+})
+
+p:AddToRegistry(H,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+local I=p:Create('ScrollingFrame',{
+BackgroundTransparency=1;
+BorderSizePixel=0;
+CanvasSize=UDim2.new(0,0,0,0);
+Size=UDim2.new(1,0,1,0);
+ZIndex=21;
+Parent=H;
+
+TopImage='rbxasset://textures/ui/Scroll/scroll-middle.png',
+BottomImage='rbxasset://textures/ui/Scroll/scroll-middle.png',
+
+ScrollBarThickness=3,
+ScrollBarImageColor3=p.AccentColor,
+})
+
+p:AddToRegistry(I,{
+ScrollBarImageColor3='AccentColor'
+})
+
+p:Create('UIListLayout',{
+Padding=UDim.new(0,0);
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=I;
+})
+
+function u:Display()
+local J,
+K=u.Values,''
+
+if t.Multi then
+for L,M in next,J do
+if u.Value[M]then
+K=K..M..', '
+end
+end
+
+K=K:sub(1,#K-2)
+else
+K=u.Value or''
+end
+
+E.Text=(K==''and'--'or K)
+end
+
+function u:GetActiveValues()
+if t.Multi then
+local J={}
+
+for K,L in next,u.Value do
+table.insert(J,K)
+end
+
+return J
+else
+return u.Value and 1 or 0
+end
+end
+
+function u:BuildDropdownList()
+local J,
+K=u.Values,{}
+
+for L,M in next,I:GetChildren()do
+if not M:IsA('UIListLayout')then
+M:Destroy()
+end
+end
+
+local N=0
+
+for O,P in next,J do
+local Q={}
+
+N=N+1
+
+local R=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Middle;
+Size=UDim2.new(1,-1,0,20);
+ZIndex=23;
+Active=true,
+Parent=I;
+})
+
+p:AddToRegistry(R,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+local S=p:CreateLabel({
+Active=false;
+Size=UDim2.new(1,-6,1,0);
+Position=UDim2.new(0,6,0,0);
+TextSize=14;
+Text=P;
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=25;
+Parent=R;
+})
+
+p:OnHighlight(R,R,
+{BorderColor3='AccentColor',ZIndex=24},
+{BorderColor3='OutlineColor',ZIndex=23}
+)
+
+local T
+
+if t.Multi then
+T=u.Value[P]
+else
+T=u.Value==P
+end
+
+function Q:UpdateButton()
+if t.Multi then
+T=u.Value[P]
+else
+T=u.Value==P
+end
+
+S.TextColor3=T and p.AccentColor or p.FontColor
+p.RegistryMap[S].Properties.TextColor3=T and'AccentColor'or'FontColor'
+end
+
+S.InputBegan:Connect(function(U)
+if U.UserInputType==Enum.UserInputType.MouseButton1 then
+local V=not T
+
+if u:GetActiveValues()==1 and(not V)and(not t.AllowNull)then
+else
+if t.Multi then
+T=V
+
+if T then
+u.Value[P]=true
+else
+u.Value[P]=nil
+end
+else
+T=V
+
+if T then
+u.Value=P
+else
+u.Value=nil
+end
+
+for W,X in next,K do
+X:UpdateButton()
+end
+end
+
+Q:UpdateButton()
+u:Display()
+
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+
+p:AttemptSave()
+end
+end
+end)
+
+Q:UpdateButton()
+u:Display()
+
+K[R]=Q
+end
+
+I.CanvasSize=UDim2.fromOffset(0,(N*20)+1)
+
+local Q=math.clamp(N*20,0,F*20)+1
+RecalculateListSize(Q)
+end
+
+function u:SetValues(J)
+if J then
+u.Values=J
+end
+
+u:BuildDropdownList()
+end
+
+function u:OpenDropdown()
+G.Visible=true
+p.OpenedFrames[G]=true
+D.Rotation=180
+end
+
+function u:CloseDropdown()
+G.Visible=false
+p.OpenedFrames[G]=nil
+D.Rotation=0
+end
+
+function u:OnChanged(J)
+u.Changed=J
+J(u.Value)
+end
+
+function u:SetValue(J)
+if u.Multi then
+local K={}
+
+for L,M in next,J do
+if table.find(u.Values,L)then
+K[L]=true
+end
+end
+
+u.Value=K
+else
+if(not J)then
+u.Value=nil
+elseif table.find(u.Values,J)then
+u.Value=J
+end
+end
+
+u:BuildDropdownList()
+
+p:SafeCallback(u.Callback,u.Value)
+p:SafeCallback(u.Changed,u.Value)
+end
+
+B.InputBegan:Connect(function(J)
+if J.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+if G.Visible then
+u:CloseDropdown()
+else
+u:OpenDropdown()
+end
+end
+end)
+
+c.InputBegan:Connect(function(J)
+if J.UserInputType==Enum.UserInputType.MouseButton1 then
+local K,L=G.AbsolutePosition,G.AbsoluteSize
+
+if l.X<K.X or l.X>K.X+L.X
+or l.Y<(K.Y-20-1)or l.Y>K.Y+L.Y then
+
+u:CloseDropdown()
+end
+end
+end)
+
+u:BuildDropdownList()
+u:Display()
+
+local J={}
+
+if type(t.Default)=='string'then
+local K=table.find(u.Values,t.Default)
+if K then
+table.insert(J,K)
+end
+elseif type(t.Default)=='table'then
+for K,L in next,t.Default do
+local M=table.find(u.Values,L)
+if M then
+table.insert(J,M)
+end
+end
+elseif type(t.Default)=='number'and u.Values[t.Default]~=nil then
+table.insert(J,t.Default)
+end
+
+if next(J)then
+for K=1,#J do
+local L=J[K]
+if t.Multi then
+u.Value[u.Values[L] ]=true
+else
+u.Value=u.Values[L]
+end
+
+if(not t.Multi)then break end
+end
+
+u:BuildDropdownList()
+u:Display()
+end
+
+v:AddBlank(t.BlankSize or 5)
+v:Resize()
+
+o[ac]=u
+
+return u
+end
+
+function ab:AddDependencyBox()
+local ac,
+
+
+
+t={Dependencies={};},self
+local u=t.Container
+
+local v=p:Create('Frame',{
+BackgroundTransparency=1;
+Size=UDim2.new(1,0,0,0);
+Visible=false;
+Parent=u;
+})
+
+local x=p:Create('Frame',{
+BackgroundTransparency=1;
+Size=UDim2.new(1,0,1,0);
+Visible=true;
+Parent=v;
+})
+
+local y=p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=x;
+})
+
+function ac:Resize()
+v.Size=UDim2.new(1,0,0,y.AbsoluteContentSize.Y)
+t:Resize()
+end
+
+y:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
+ac:Resize()
+end)
+
+v:GetPropertyChangedSignal('Visible'):Connect(function()
+ac:Resize()
+end)
+
+function ac:Update()
+for z,A in next,ac.Dependencies do
+local B,
+C=A[1],A[2]
+
+if B.Type=='Toggle'and B.Value~=C then
+v.Visible=false
+ac:Resize()
+return
+end
+end
+
+v.Visible=true
+ac:Resize()
+end
+
+function ac:SetupDependencies(z)
+for A,B in next,z do local _, _, _=
+type(B)=='table', 
+B[1], 
+B[2]~=nil
+end
+
+ac.Dependencies=z
+ac:Update()
+end
+
+ac.Container=x
+
+setmetatable(ac,aa)
+
+table.insert(p.DependencyBoxes,ac)
+
+return ac
+end
+
+aa.__index=ab
+aa.__namecall=function(ac,t,...)
+return ab[t](...)
+end
+end
+
+
+do
+p.NotificationArea=p:Create('Frame',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,0,0,40);
+Size=UDim2.new(0,300,0,200);
+ZIndex=100;
+Parent=m;
+})
+
+p:Create('UIListLayout',{
+Padding=UDim.new(0,4);
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=p.NotificationArea;
+})
+
+local ab=p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.new(0,100,0,-25);
+Size=UDim2.new(0,213,0,20);
+ZIndex=200;
+Visible=false;
+Parent=m;
+})
+
+local ac=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.AccentColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=201;
+Parent=ab;
+})
+
+p:AddToRegistry(ac,{
+BorderColor3='AccentColor';
+})
+
+local t=p:Create('Frame',{
+BackgroundColor3=Color3.new(1,1,1);
+BorderSizePixel=0;
+Position=UDim2.new(0,1,0,1);
+Size=UDim2.new(1,-2,1,-2);
+ZIndex=202;
+Parent=ac;
+})
+
+local u=p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,p:GetDarkerColor(p.MainColor)),
+ColorSequenceKeypoint.new(1,p.MainColor),
+});
+Rotation=-90;
+Parent=t;
+})
+
+p:AddToRegistry(u,{
+Color=function()
+return ColorSequence.new({
+ColorSequenceKeypoint.new(0,p:GetDarkerColor(p.MainColor)),
+ColorSequenceKeypoint.new(1,p.MainColor),
+})
+end
+})
+
+local v=p:CreateLabel({
+Position=UDim2.new(0,5,0,0);
+Size=UDim2.new(1,-4,1,0);
+TextSize=14;
+TextXAlignment=Enum.TextXAlignment.Left;
+ZIndex=203;
+Parent=t;
+})
+
+p.Watermark=ab
+p.WatermarkText=v
+p:MakeDraggable(p.Watermark)
+
+
+
+local x=p:Create('Frame',{
+AnchorPoint=Vector2.new(0,0.5);
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.new(0,10,0.5,0);
+Size=UDim2.new(0,210,0,20);
+Visible=false;
+ZIndex=100;
+Parent=m;
+})
+
+local y=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=101;
+Parent=x;
+})
+
+p:AddToRegistry(y,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+},true)
+
+local z=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderSizePixel=0;
+Size=UDim2.new(1,0,0,2);
+ZIndex=102;
+Parent=y;
+})
+
+p:AddToRegistry(z,{
+BackgroundColor3='AccentColor';
+},true)
+
+p:CreateLabel({
+Size=UDim2.new(1,0,0,20);
+Position=UDim2.fromOffset(5,2),
+TextXAlignment=Enum.TextXAlignment.Left,
+
+Text='Keybinds';
+ZIndex=104;
+Parent=y;
+})
+
+local B=p:Create('Frame',{
+BackgroundTransparency=1;
+Size=UDim2.new(1,0,1,-20);
+Position=UDim2.new(0,0,0,20);
+ZIndex=1;
+Parent=y;
+})
+
+p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=B;
+})
+
+p:Create('UIPadding',{
+PaddingLeft=UDim.new(0,5),
+Parent=B,
+})
+
+p.KeybindFrame=x
+p.KeybindContainer=B
+p:MakeDraggable(x)
+end
+
+function p:SetWatermarkVisibility(ab)
+p.Watermark.Visible=ab
+end
+
+function p:SetWatermark(ab)
+local ac,t=p:GetTextBounds(ab,p.Font,14)
+p.Watermark.Size=UDim2.new(0,ac+15,0,(t*1.5)+3)
+p:SetWatermarkVisibility(true)
+
+p.WatermarkText.Text=ab
+end
+
+
+
+
+
+
+
+
+
+function p:Notify(ab,ac)
+local t,u=p:GetTextBounds(ab,p.Font,14)
+
+u=u+7
+
+local v=p:Create('Frame',{
+BorderColor3=Color3.new(0,0,0);
+Position=UDim2.new(0,100,0,10);
+Size=UDim2.new(0,0,0,u);
+ClipsDescendants=true;
+ZIndex=100;
+Parent=p.NotificationArea;
+})
+
+local x=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,1,0);
+ZIndex=101;
+Parent=v;
+})
+
+p:AddToRegistry(x,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+},true)
+
+local y=p:Create('Frame',{
+BackgroundColor3=Color3.new(1,1,1);
+BorderSizePixel=0;
+Position=UDim2.new(0,1,0,1);
+Size=UDim2.new(1,-2,1,-2);
+ZIndex=102;
+Parent=x;
+})
+
+local z=p:Create('UIGradient',{
+Color=ColorSequence.new({
+ColorSequenceKeypoint.new(0,p:GetDarkerColor(p.MainColor)),
+ColorSequenceKeypoint.new(1,p.MainColor),
+});
+Rotation=-90;
+Parent=y;
+})
+
+p:AddToRegistry(z,{
+Color=function()
+return ColorSequence.new({
+ColorSequenceKeypoint.new(0,p:GetDarkerColor(p.MainColor)),
+ColorSequenceKeypoint.new(1,p.MainColor),
+})
+end
+})
+
+p:CreateLabel({
+Position=UDim2.new(0,4,0,0);
+Size=UDim2.new(1,-4,1,0);
+Text=ab;
+TextXAlignment=Enum.TextXAlignment.Left;
+TextSize=14;
+ZIndex=103;
+Parent=y;
+})
+
+local B=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderSizePixel=0;
+Position=UDim2.new(0,-1,0,-1);
+Size=UDim2.new(0,3,1,2);
+ZIndex=104;
+Parent=v;
+})
+
+p:AddToRegistry(B,{
+BackgroundColor3='AccentColor';
+},true)
+
+pcall(v.TweenSize,v,UDim2.new(0,t+8+4,0,u),'Out','Quad',0.4,true)
+
+task.spawn(function()
+wait(ac or 5)
+
+pcall(v.TweenSize,v,UDim2.new(0,0,0,u),'Out','Quad',0.4,true)
+
+wait(0.4)
+
+v:Destroy()
+end)
+end
+
+function p:CreateWindow(...)
+local ab,
+ac={...},{AnchorPoint=Vector2.zero}
+
+if type(...)=='table'then
+ac=...
+else
+ac.Title=ab[1]
+ac.Version=ab[2]
+ac.AutoShow=ab[3]or false
+end
+
+if type(ac.Title)~='string'then ac.Title='No title'end
+if type(ac.Version)~='string'then ac.Version=''end
+if type(ac.MenuFadeTime)~='number'then ac.MenuFadeTime=0.2 end
+
+if typeof(ac.Position)~='UDim2'then ac.Position=UDim2.fromOffset(175,50)end
+if type(ac.Size)~='UDim2'then ac.Size=UDim2.fromOffset(550,570)end
+
+if ac.Center then
+ac.AnchorPoint=Vector2.new(0.5,0.5)
+ac.Position=UDim2.fromScale(0.5,0.5)
+end
+
+local t,
+
+
+
+u,
+
+
+
+
+
+
+
+
+
+
+v={Tabs={};},p:Create('Frame',{AnchorPoint=ac.AnchorPoint,BackgroundColor3=Color3.new(0,0,0);BorderSizePixel=0;Position=ac.Position,Size=ac.Size,Visible=false;ZIndex=1;Parent=m;}),UDim2.new(
+ac.Size.X.Scale,
+ac.Size.X.Offset+57,
+ac.Size.Y.Scale,
+ac.Size.Y.Offset+57
+)
+local x=p:Create('ImageLabel',{
+AnchorPoint=ac.AnchorPoint,
+BackgroundTransparency=1,
+Position=ac.Position,
+Size=v,
+Image='rbxassetid://6015897843',
+ImageColor3=p.AccentColor,
+ImageTransparency=0,
+ZIndex=1,
+Parent=u,
+BackgroundColor3=Color3.fromRGB(255,255,255),
+BorderColor3=Color3.fromRGB(0,0,0),
+BorderSizePixel=0,
+})
+
+p:MakeDraggable(u,25)
+
+local y=p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.AccentColor;
+BorderMode=Enum.BorderMode.Inset;
+Position=UDim2.new(0,1,0,1);
+Size=UDim2.new(1,-2,1,-2);
+ZIndex=1;
+Parent=u;
+})
+
+p:AddToRegistry(y,{
+BackgroundColor3='MainColor';
+BorderColor3='AccentColor';
+})
+
+p:AddToRegistry(x,{
+ImageColor3='AccentColor';
+})
+
+local z,
+
+
+
+
+
+
+
+
+
+
+A=p:CreateLabel({Position=UDim2.new(0,0,0,0);Size=UDim2.new(1,0,0,25);Text=if ac.Version and ac.Version~=""then ac.Title.." | v"..ac.Version else ac.Title;TextXAlignment=Enum.TextXAlignment.Center;ZIndex=1;Parent=y;RichText=true;}),p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+Position=UDim2.new(0,8,0,25);
+Size=UDim2.new(1,-16,1,-33);
+ZIndex=1;
+Parent=y;
+})
+
+p:AddToRegistry(A,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+local B=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=Color3.new(0,0,0);
+BorderMode=Enum.BorderMode.Inset;
+Position=UDim2.new(0,0,0,0);
+Size=UDim2.new(1,0,1,0);
+ZIndex=1;
+Parent=A;
+})
+
+p:AddToRegistry(B,{
+BackgroundColor3='BackgroundColor';
+})
+
+local C=p:Create('Frame',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,8,0,8);
+Size=UDim2.new(1,-16,0,40);
+ZIndex=1;
+Parent=B;
+})
+
+local D,
+
+
+
+
+
+
+
+E=p:Create('UIListLayout',{Padding=UDim.new(0,0);FillDirection=Enum.FillDirection.Horizontal;HorizontalAlignment=Enum.HorizontalAlignment.Center;SortOrder=Enum.SortOrder.LayoutOrder;Parent=C;}),p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=p.OutlineColor;
+Position=UDim2.new(0,8,0,54);
+Size=UDim2.new(1,-16,1,-60);
+ZIndex=2;
+Parent=B;
+})
+
+
+p:AddToRegistry(E,{
+BackgroundColor3='MainColor';
+BorderColor3='OutlineColor';
+})
+
+
+function t:SetWindowTitle(F)
+z.Text=F
+end local UpdateTabButtonSizes=function()
+
+
+local F=#t.Tabs
+if F==0 then return end
+
+local G,
+H=C.AbsoluteSize.X,0*(F-1)
+local I=(G-H)/F
+
+for J,K in ipairs(t.Tabs)do
+K.Button.Size=UDim2.new(0,I,1,0)
+end end
+
+
+function t:AddTab(F)
+local G,
+
+
+
+
+H={Groupboxes={};Tabboxes={};},p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+Size=UDim2.new(0,100,1,0);
+LayoutOrder=#t.Tabs+1;
+ZIndex=1;
+Parent=C;
+})
+
+G.Button=H
+
+p:AddToRegistry(H,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+p:CreateLabel({
+Position=UDim2.new(0,0,0,0);
+Size=UDim2.new(1,0,1,0);
+Text=F;
+ZIndex=1;
+Parent=H;
+})
+
+local J=p:Create('Frame',{
+Name='TabFrame',
+BackgroundTransparency=1;
+Position=UDim2.new(0,0,0,0);
+Size=UDim2.new(1,0,1,0);
+Visible=false;
+ZIndex=2;
+Parent=E;
+})
+
+local K,
+
+
+
+
+
+
+
+
+
+
+
+
+L=p:Create('ScrollingFrame',{BackgroundTransparency=1;BorderSizePixel=0;Position=UDim2.new(0,8-1,0,8-1);Size=UDim2.new(0.5,-12+2,1,-8+1);CanvasSize=UDim2.new(0,0,0,0);BottomImage='';TopImage='';ScrollBarThickness=0;ZIndex=2;Parent=J;}),p:Create('ScrollingFrame',{
+BackgroundTransparency=1;
+BorderSizePixel=0;
+Position=UDim2.new(0.5,4+1,0,8-1);
+Size=UDim2.new(0.5,-12+2,1,-8+1);
+CanvasSize=UDim2.new(0,0,0,0);
+BottomImage='';
+TopImage='';
+ScrollBarThickness=0;
+ZIndex=2;
+Parent=J;
+})
+
+p:Create('UIListLayout',{
+Padding=UDim.new(0,8);
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+HorizontalAlignment=Enum.HorizontalAlignment.Center;
+Parent=K;
+})
+
+p:Create('UIListLayout',{
+Padding=UDim.new(0,8);
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+HorizontalAlignment=Enum.HorizontalAlignment.Center;
+Parent=L;
+})
+
+for M,N in next,{K,L}do
+N:WaitForChild('UIListLayout'):GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
+N.CanvasSize=UDim2.fromOffset(0,N.UIListLayout.AbsoluteContentSize.Y)
+end)
+end
+
+
+
+
+
+
+function G:ShowTab()
+for O,P in next,t.Tabs do
+P:HideTab()
+end
+H.BackgroundColor3=p.MainColor
+p.RegistryMap[H].Properties.BackgroundColor3='MainColor'
+J.Visible=true
+end
+
+function G:HideTab()
+H.BackgroundColor3=p.BackgroundColor
+p.RegistryMap[H].Properties.BackgroundColor3='BackgroundColor'
+J.Visible=false
+end
+
+function G:SetLayoutOrder(O)
+H.LayoutOrder=O
+D:ApplyLayout()
+UpdateTabButtonSizes()
+end
+
+table.insert(t.Tabs,G)
+UpdateTabButtonSizes()
+
+
+function G:AddGroupbox(O)
+local P,
+
+Q={},p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,0,507+2);
+ZIndex=2;
+Parent=O.Side==1 and K or L;
+})
+
+p:AddToRegistry(Q,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+local R=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-2,1,-2);
+Position=UDim2.new(0,1,0,1);
+ZIndex=4;
+Parent=Q;
+})
+
+p:AddToRegistry(R,{
+BackgroundColor3='BackgroundColor';
+})
+
+local S=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderSizePixel=0;
+Size=UDim2.new(1,0,0,2);
+ZIndex=5;
+Parent=R;
+})
+
+p:AddToRegistry(S,{
+BackgroundColor3='AccentColor';
+})
+
+p:CreateLabel({
+Size=UDim2.new(1,0,0,18);
+Position=UDim2.new(0,4,0,2);
+TextSize=14;
+Text=O.Name;
+TextXAlignment=Enum.TextXAlignment.Center;
+ZIndex=5;
+Parent=R;
+})
+
+local U=p:Create('Frame',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,4,0,20);
+Size=UDim2.new(1,-4,1,-20);
+ZIndex=1;
+Parent=R;
+})
+
+p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=U;
+})
+
+function P:Resize()
+local V=0
+
+for W,X in next,P.Container:GetChildren()do
+if(not X:IsA('UIListLayout'))and X.Visible then
+V=V+X.Size.Y.Offset
+end
+end
+
+Q.Size=UDim2.new(1,0,0,20+V+2+2)
+end
+
+P.Container=U
+setmetatable(P,aa)
+
+P:AddBlank(3)
+P:Resize()
+
+G.Groupboxes[O.Name]=P
+
+return P
+end
+
+function G:AddLeftGroupbox(O)
+return G:AddGroupbox({Side=1;Name=O;})
+end
+
+function G:AddRightGroupbox(O)
+return G:AddGroupbox({Side=2;Name=O;})
+end
+
+function G:AddTabbox(O)
+local P,
+
+
+
+Q={Tabs={};},p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=p.OutlineColor;
+BorderMode=Enum.BorderMode.Inset;
+Size=UDim2.new(1,0,0,0);
+ZIndex=2;
+Parent=O.Side==1 and K or L;
+})
+
+p:AddToRegistry(Q,{
+BackgroundColor3='BackgroundColor';
+BorderColor3='OutlineColor';
+})
+
+local R=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(1,-2,1,-2);
+Position=UDim2.new(0,1,0,1);
+ZIndex=4;
+Parent=Q;
+})
+
+p:AddToRegistry(R,{
+BackgroundColor3='BackgroundColor';
+})
+
+local S=p:Create('Frame',{
+BackgroundColor3=p.AccentColor;
+BorderSizePixel=0;
+Size=UDim2.new(1,0,0,2);
+ZIndex=10;
+Parent=R;
+})
+
+p:AddToRegistry(S,{
+BackgroundColor3='AccentColor';
+})
+
+local T=p:Create('Frame',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,0,0,1);
+Size=UDim2.new(1,0,0,18);
+ZIndex=5;
+Parent=R;
+})
+
+p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Horizontal;
+HorizontalAlignment=Enum.HorizontalAlignment.Left;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=T;
+})
+
+function P:AddTab(U)
+local V,
+
+W={},p:Create('Frame',{
+BackgroundColor3=p.MainColor;
+BorderColor3=Color3.new(0,0,0);
+Size=UDim2.new(0.5,0,1,0);
+ZIndex=6;
+Parent=T;
+})
+
+p:AddToRegistry(W,{
+BackgroundColor3='MainColor';
+})
+
+p:CreateLabel({
+Size=UDim2.new(1,0,1,0);
+TextSize=14;
+Text=U;
+TextXAlignment=Enum.TextXAlignment.Center;
+ZIndex=7;
+Parent=W;
+})
+
+local Y=p:Create('Frame',{
+BackgroundColor3=p.BackgroundColor;
+BorderSizePixel=0;
+Position=UDim2.new(0,0,1,0);
+Size=UDim2.new(1,0,0,1);
+Visible=false;
+ZIndex=9;
+Parent=W;
+})
+
+p:AddToRegistry(Y,{
+BackgroundColor3='BackgroundColor';
+})
+
+local Z=p:Create('Frame',{
+BackgroundTransparency=1;
+Position=UDim2.new(0,4,0,20);
+Size=UDim2.new(1,-4,1,-20);
+ZIndex=1;
+Visible=false;
+Parent=R;
+})
+
+p:Create('UIListLayout',{
+FillDirection=Enum.FillDirection.Vertical;
+SortOrder=Enum.SortOrder.LayoutOrder;
+Parent=Z;
+})
+
+function V:Show()
+for _,ad in next,P.Tabs do
+ad:Hide()
+end
+
+Z.Visible=true
+Y.Visible=true
+
+W.BackgroundColor3=p.BackgroundColor
+p.RegistryMap[W].Properties.BackgroundColor3='BackgroundColor'
+
+ad:Resize()
+end
+
+function V:Hide()
+Z.Visible=false
+Y.Visible=false
+
+W.BackgroundColor3=p.MainColor
+p.RegistryMap[W].Properties.BackgroundColor3='MainColor'
+end
+
+function V:Resize()
+local ad=0
+
+for _,ae in next,P.Tabs do
+ad=ad+1
+end
+
+for af,ag in next,T:GetChildren()do
+if not ag:IsA('UIListLayout')then
+ag.Size=UDim2.new(1/ad,0,1,0)
+end
+end
+
+if(not Z.Visible)then
+return
+end
+
+local ah=0
+
+for ai,aj in next,ae.Container:GetChildren()do
+if(not aj:IsA('UIListLayout'))and aj.Visible then
+ah=ah+aj.Size.Y.Offset
+end
+end
+
+Q.Size=UDim2.new(1,0,0,20+ah+2+2)
+end
+
+W.InputBegan:Connect(function(ad)
+if ad.UserInputType==Enum.UserInputType.MouseButton1 and not p:MouseIsOverOpenedFrame()then
+V:Show()
+V:Resize()
+end
+end)
+
+
+
+
+
+
+V.Container=Z
+P.Tabs[U]=V
+
+setmetatable(V,aa)
+
+V:AddBlank(3)
+V:Resize()
+
+if#T:GetChildren()==2 then
+V:Show()
+end
+
+return V
+end
+
+G.Tabboxes[O.Name or'']=P
+
+return P
+end
+
+function G:AddLeftTabbox(ad)
+return G:AddTabbox({Name=ad,Side=1;})
+end
+
+function G:AddRightTabbox(ad)
+return G:AddTabbox({Name=ad,Side=2;})
+end
+
+H.InputBegan:Connect(function(ad)
+if ad.UserInputType==Enum.UserInputType.MouseButton1 then
+G:ShowTab()
+end
+end)
+
+if#E:GetChildren()==1 then
+G:ShowTab()
+end
+
+t.Tabs[F]=G
+return G
+end
+
+local ad,
+
+
+
+
+
+
+
+
+ae,
+ag,
+ah=p:Create('TextButton',{BackgroundTransparency=1;Size=UDim2.new(0,0,0,0);Visible=true;Text='';Modal=false;Parent=m;}),{},false,false
+
+function p:Toggle()
+if ah then
+return
+end
+
+local ai=ac.MenuFadeTime
+ah=true
+ag=(not ag)
+ad.Modal=ag
+
+if ag then
+u.Visible=true
+
+task.spawn(function()
+
+local aj,
+
+F=c.MouseIconEnabled,Drawing.new('Triangle')
+F.Thickness=1
+F.Filled=true
+F.Visible=true
+
+local G=Drawing.new('Triangle')
+G.Thickness=1
+G.Filled=false
+G.Color=Color3.new(1,1,1)
+G.Visible=true
+
+while ag and m.Parent do
+c.MouseIconEnabled=false
+
+local H=c:GetMouseLocation()
+
+F.Color=p.AccentColor
+
+F.PointA=Vector2.new(H.X,H.Y)
+F.PointB=Vector2.new(H.X+16,H.Y+6)
+F.PointC=Vector2.new(H.X+6,H.Y+16)
+
+G.PointA=F.PointA
+G.PointB=F.PointB
+G.PointC=F.PointC
+
+j:Wait()
+end
+
+c.MouseIconEnabled=aj
+
+F:Remove()
+G:Remove()
+end)
+end
+
+for aj,F in next,u:GetDescendants()do
+local G={}
+
+if F:IsA('ImageLabel')then
+table.insert(G,'ImageTransparency')
+table.insert(G,'BackgroundTransparency')
+elseif F:IsA('TextLabel')or F:IsA('TextBox')then
+table.insert(G,'TextTransparency')
+elseif F:IsA('Frame')or F:IsA('ScrollingFrame')then
+table.insert(G,'BackgroundTransparency')
+elseif F:IsA('UIStroke')then
+table.insert(G,'Transparency')
+end
+
+local H=ae[F]
+
+if(not H)then
+H={}
+ae[F]=H
+end
+
+for I,J in next,G do
+if not H[J]then
+H[J]=F[J]
+end
+
+if H[J]==1 then
+continue
+end
+
+i:Create(F,TweenInfo.new(ai,Enum.EasingStyle.Linear),{[J]=ag and H[J]or 1}):Play()
+end
+end
+
+task.wait(ai)
+
+u.Visible=ag
+
+ah=false
+end
+
+p:GiveSignal(c.InputBegan:Connect(function(ai,aj)
+if type(p.ToggleKeybind)=='table'and p.ToggleKeybind.Type=='KeyPicker'then
+if ai.UserInputType==Enum.UserInputType.Keyboard and ai.KeyCode.Name==p.ToggleKeybind.Value then
+task.spawn(p.Toggle)
+end
+elseif ai.KeyCode==Enum.KeyCode.LeftControl or(ai.KeyCode==Enum.KeyCode.LeftAlt and(not aj))then
+task.spawn(p.Toggle)
+end
+end))
+
+if ac.AutoShow then task.spawn(p.Toggle)end
+
+t.Holder=u
+
+return t
+end local OnPlayerChange=function()
+
+
+local ab=GetPlayersString()
+
+for ac,ad in next,o do
+if ad.Type=='Dropdown'and ad.SpecialType=='Player'then
+ad:SetValues(ab)
+end
+end end
+
+
+g.PlayerAdded:Connect(OnPlayerChange)
+g.PlayerRemoving:Connect(OnPlayerChange)
+
+getgenv().Library=p
+
+for ab,ac in pairs(({"Internal","HttpCache","Instances","Signals","Script","PhysicsCollision","PhysicsParts","GraphicsSolidModels","GraphicsMeshParts","GraphicsParticles","GraphicsParts","GraphicsSpatialHash","GraphicsTerrain","GraphicsTexture","GraphicsTextureCharacter","Sounds","StreamingSounds","TerrainVoxels","Gui","Animation","Navigation","GeometryCSG"}))do
+memorystats.restore(ac)
+end
+return p,n,o
