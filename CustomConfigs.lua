@@ -3,8 +3,8 @@ return {
         hwid = "30373736344137382D324242422D353139352D424132392D433032423735433042363343",
         clientid = "nil"
     },
-    ["test"] = {
-        hwid = "executor_hwid_here",
-        clientid = "fallback_client_id_here"
+    ["thehyperborean_00"] = {
+        hwid = "nil",
+        clientid = "1E77A517-FB06-4285-B48B-78202BCE908E"
     }
 }
