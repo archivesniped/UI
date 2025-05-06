@@ -6,5 +6,17 @@ return {
     ["thehyperborean_00"] = {
         hwid = "nil",
         clientid = "1E77A517-FB06-4285-B48B-78202BCE908E"
+    },
+    ["test"] = {
+        hwid = "nil",
+        clientid = "test"
+    },
+    ["test"] = {
+        hwid = "nil",
+        clientid = "test"
+    },
+    ["test"] = {
+        hwid = "nil",
+        clientid = "test"
     }
 }
