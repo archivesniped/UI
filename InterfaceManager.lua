@@ -6,7 +6,8 @@ local InterfaceManager = {} do
         Theme = "Dark",
         Acrylic = true,
         Transparency = true,
-        MenuKeybind = "LeftControl"
+        MenuKeybind = "LeftControl",
+        Icon = "≡" -- Default icon
     }
 
     function InterfaceManager:SetFolder(folder)
@@ -115,11 +116,38 @@ local InterfaceManager = {} do
         local button = Instance.new("TextButton", screenGui)
         button.Size = UDim2.new(0, 50, 0, 50)
         button.Position = UDim2.new(0, 10, 0, 10)
-        button.Text = "≡"
+        button.Text = InterfaceManager.Settings.Icon
         button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         button.TextColor3 = Color3.fromRGB(0, 0, 0)
         button.TextSize = 30
+        button.AnchorPoint = Vector2.new(0.5, 0.5)
+        button.BackgroundTransparency = 0.5
+        button.Shape = Enum.UIShape.Cylinder
 
+        -- Make the button draggable
+        local dragging, dragInput, dragStart, startPos
+        button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = true
+                dragStart = input.Position
+                startPos = button.Position
+
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        button.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                local delta = input.Position - dragStart
+                button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        -- Toggle UI on click
         button.MouseButton1Click:Connect(function()
             local menuKeybind = InterfaceManager.Settings.MenuKeybind
             if menuKeybind then
@@ -135,3 +163,4 @@ local InterfaceManager = {} do
 end
 
 return InterfaceManager
+
