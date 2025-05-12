@@ -121,13 +121,12 @@ local InterfaceManager = {} do
         button.TextSize = 30
 
         button.MouseButton1Click:Connect(function()
-            local ui = game:GetService("CoreGui"):FindFirstChild(self.Folder)
-            if ui then
-                local minimizeKeybind = self.Library.MinimizeKeybind
-                if minimizeKeybind then
-                    minimizeKeybind:SetValue(not minimizeKeybind.Value)
-                    self.Library:ToggleUI()
-                end
+            local menuKeybind = InterfaceManager.Settings.MenuKeybind
+            if menuKeybind then
+                game:GetService("UserInputService"):InputBegan({
+                    UserInputType = Enum.UserInputType.Keyboard,
+                    KeyCode = Enum.KeyCode[menuKeybind]
+                })
             end
         end)
     end
