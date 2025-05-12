@@ -123,7 +123,11 @@ local InterfaceManager = {} do
         button.MouseButton1Click:Connect(function()
             local ui = game:GetService("CoreGui"):FindFirstChild(self.Folder)
             if ui then
-                ui.Enabled = not ui.Enabled
+                local minimizeKeybind = self.Library.MinimizeKeybind
+                if minimizeKeybind then
+                    minimizeKeybind:SetValue(not minimizeKeybind.Value)
+                    self.Library:ToggleUI()
+                end
             end
         end)
     end
