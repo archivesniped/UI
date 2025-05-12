@@ -7,7 +7,7 @@ local InterfaceManager = {} do
         Acrylic = true,
         Transparency = true,
         MenuKeybind = "LeftControl",
-        Icon = "≡" -- Default icon
+        Icon = "rbxassetid://75734470763843"
     }
 
     function InterfaceManager:SetFolder(folder)
@@ -116,15 +116,18 @@ local InterfaceManager = {} do
         local button = Instance.new("TextButton", screenGui)
         button.Size = UDim2.new(0, 50, 0, 50)
         button.Position = UDim2.new(0, 10, 0, 10)
-        button.Text = InterfaceManager.Settings.Icon
+        button.Text = ""
         button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         button.TextColor3 = Color3.fromRGB(0, 0, 0)
         button.TextSize = 30
         button.AnchorPoint = Vector2.new(0.5, 0.5)
         button.BackgroundTransparency = 0.5
         button.Shape = Enum.UIShape.Cylinder
+        local iconImageLabel = Instance.new("ImageLabel", button)
+        iconImageLabel.Size = UDim2.new(1, 0, 1, 0)
+        iconImageLabel.Image = InterfaceManager.Settings.Icon
+        iconImageLabel.BackgroundTransparency = 1
 
-        -- Make the button draggable
         local dragging, dragInput, dragStart, startPos
         button.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -147,7 +150,6 @@ local InterfaceManager = {} do
             end
         end)
 
-        -- Toggle UI on click
         button.MouseButton1Click:Connect(function()
             local menuKeybind = InterfaceManager.Settings.MenuKeybind
             if menuKeybind then
@@ -163,4 +165,3 @@ local InterfaceManager = {} do
 end
 
 return InterfaceManager
-
