@@ -9,7 +9,7 @@ return {
     },
     ["drynfthh"] = {
         hwid = "nil",
-        clientid = "51998c7d-3d0e-48c6-8d4b-0f7ee7e8b25e"
+        clientid = "8cfff5c9-0d5e-48af-966f-529ff2e70348"
     },
     ["nomad7th"] = {
         hwid = "nil",
